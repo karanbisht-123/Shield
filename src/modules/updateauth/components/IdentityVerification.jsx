@@ -158,7 +158,7 @@ const IdentityVerification = ({ nextStep }) => {
 
   return (
     <motion.div
-      className=" xl:px-6 p-2   rounded-lg text-black max-w-2xl mx-auto lg:py-10"
+      className=" xl:px-6 p-2   rounded-lg text-black max-w-2xl mx-auto lg:py-10 pb-20 md:pb-10"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -280,7 +280,7 @@ const IdentityVerification = ({ nextStep }) => {
       >
         <button
           onClick={handleSubmit}
-          className="w-full p-3 rounded-lg hover:bg-blue-600 bg-blue-600 text-white hover:bg-blue-700"
+          className="w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
         >
           Submit
         </button>

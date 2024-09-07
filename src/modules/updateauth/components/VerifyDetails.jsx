@@ -100,7 +100,7 @@ const VerifyDetails = ({ nextStep }) => {
 
   return (
     <motion.div
-      className="xl:px-6 p-2 mx-auto rounded-lg lg:py-10"
+      className="xl:px-6 p-2 mx-auto rounded-lg lg:py-10  pb-20 md:pb-10"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}

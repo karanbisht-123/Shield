@@ -143,7 +143,7 @@ const App = () => {
         } />
         <Route path="/registration" element={<MultiStepRegistrationForm />} />
         <Route path="/verification" element={
-          <div className="max-w-7xl xl:flex mx-auto px-6 min-h-screen ">
+          <div className="max-w-7xl xl:flex mx-auto px-6 min-h-screen  ">
             <StepProgress currentStep={currentStep} setCurrentStep={setCurrentStep} />
             {currentStep === 1 && <VerifyDetails nextStep={nextStep} />}
             {currentStep === 2 && <IdentityVerification nextStep={nextStep} />}

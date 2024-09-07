@@ -83,7 +83,7 @@ const TransactionHistoryScreen = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 bg-gray-50 min-h-screen  xl:px-28">
+    <div className="max-w-7xl mx-auto px-4 py-8 bg-gray-50 min-h-screen  xl:px-28 pb-20 md:pb-10">
       <h1 className="text-2xl font-bold mb-6">Transaction History</h1>
       
       <div className="relative mb-6">
