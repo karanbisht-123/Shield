@@ -109,6 +109,7 @@ import VerifyDetails from "./modules/updateauth/components/VerifyDetails";
 import WalletScreen from "./modules/components/WalletScreen";
 import ScrollToTop from "./modules/components/ScrollToTop";
 import AuthForm from "./modules/components/AuthForm";
+import CryptoSwap from "./modules/components/CryptoSwap";
 const App = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isMobile, setIsMobile] = useState(false);

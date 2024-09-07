@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { FaChevronDown, FaInfoCircle, FaExchangeAlt } from "react-icons/fa";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-
+import { useOrder } from '../custmhook/OrderContext';
 const CryptoSwap = () => {
+  const { createOrder } = useOrder();
   const [activeSection, setActiveSection] = useState('buy');
   const [spendAmount, setSpendAmount] = useState('100');
   const [receiveAmount, setReceiveAmount] = useState('0');
@@ -70,17 +71,50 @@ const CryptoSwap = () => {
     setSpendAmount(e.target.value);
   };
 
-  const handleCreateOrder = () => {
-    const userEmail = localStorage.getItem('userEmail');
-    if (userEmail) {
-      alert(`Order created! You will ${activeSection} ${receiveAmount} ${receiveCurrency.toUpperCase()} for ${spendAmount} ${spendCurrency.toUpperCase()}`);
-    } else {
-      console.log("Redirecting to verification page");
-      navigate("/verification");
-    }
+
+ 
+
+  const generateRandomBankDetails = () => {
+    const randomBankAccount = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+    return {
+      bankAccount: randomBankAccount,
+      bankName: 'Acme Bank',
+      bankIFSC: 'ACME000' + Math.floor(1000 + Math.random() * 9000).toString(),
+      accountHolderName: 'John Doe',
+      branchName: 'Downtown Branch'
+    };
   };
   
-
+  const generateRandomCryptoWallet = () => {
+    const randomAddress = '0x' + Math.random().toString(16).substr(2, 40).toUpperCase();
+    return {
+      cryptoWallet: randomAddress,
+      walletProvider: 'CryptoVault',
+      walletName: 'JohnsWallet'
+    };
+  };
+  
+  const handleCreateOrder = () => {
+    const paymentDetails = activeSection === 'buy' 
+      ? generateRandomBankDetails() 
+      : generateRandomCryptoWallet();
+    
+    const orderData = {
+      type: activeSection, // 'buy' or 'sell'
+      spendAmount,
+      receiveAmount,
+      spendCurrency,
+      receiveCurrency,
+      paymentDetails // Include the dummy bank or crypto wallet details
+    };
+    
+    createOrder(orderData);
+    
+    navigate("/verification");
+  };
+  
+  
+  
   const toggleCurrencies = () => {
     const tempCurrency = spendCurrency;
     const tempAmount = spendAmount;

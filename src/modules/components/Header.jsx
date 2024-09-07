@@ -27,7 +27,7 @@ const Header = () => {
                   Home
                 </button>
               </li>
-              <li>
+              {/* <li>
                 <button
                   onClick={() => navigate("/transactions")}
                   className="hover:text-gray-400 transition duration-300"
@@ -42,18 +42,18 @@ const Header = () => {
                 >
                   On off Ramp
                 </button>
-              </li>
+              </li> */}
             </ul>
           </nav>
 
           {/* Header Button Container */}
           <div className="Header_button_container flex gap-4">
-            <button
+            {/* <button
               onClick={() => navigate("/user/auth")}
               className="border border-[#2087C2] px-3 py-1.5 rounded-lg"
             >
               Sign Up
-            </button>
+            </button> */}
           </div>
         </div>
       </header>
@@ -73,7 +73,7 @@ const Header = () => {
             <FaHome className="text-2xl" />
             <span className="text-xs">Home</span>
           </button>
-          <button
+          {/* <button
             className={`flex flex-col items-center ${
               activeTab === "Trade" ? "text-blue-500" : "text-gray-600"
             } transition-colors`}
@@ -108,7 +108,7 @@ const Header = () => {
           >
             <FaUser className="text-2xl" />
             <span className="text-xs">Account</span>
-          </button>
+          </button> */}
         </div>
       </footer>
     </>
