@@ -91,7 +91,9 @@
 // export default App;
 
 
+
 import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Header from "./modules/components/Header";
 import HeroSection from "./modules/components/HeroSection";
 import Benefits from "./modules/components/Benfints";
@@ -105,7 +107,8 @@ import Deposit from "./modules/updateauth/components/Deposit";
 import IdentityVerification from "./modules/updateauth/components/IdentityVerification";
 import VerifyDetails from "./modules/updateauth/components/VerifyDetails";
 import WalletScreen from "./modules/components/WalletScreen";
-
+import ScrollToTop from "./modules/components/ScrollToTop";
+import AuthForm from "./modules/components/AuthForm";
 const App = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
@@ -121,43 +124,49 @@ const App = () => {
   }, []);
 
   const nextStep = () => {
-    setCurrentStep((prev) => (prev < 3 ? prev + 1 : 1)); // Loop back to the first step
+    setCurrentStep((prev) => (prev < 3 ? prev + 1 : 1));
   };
 
   return (
+
     <>
+     <ScrollToTop />
       <Header />
-      <HeroSection />
-      <Benefits />
-      <WhyShield />
-      <WhoWeAre />
-      <div className="max-w-7xl xl:flex mx-auto p-6 min-h-screen py-10">
-        {/* Step Progress */}
-        <StepProgress currentStep={currentStep} setCurrentStep={setCurrentStep} />
-
-        {/* Step Components */}
-        {currentStep === 1 && <VerifyDetails nextStep={nextStep} />}
-        {currentStep === 2 && <IdentityVerification nextStep={nextStep} />}
-        {currentStep === 3 && <Deposit nextStep={nextStep} />}
-      </div>
-
-      <TransactionHistoryScreen />
-      <OnOffRampScreen />
-      {/* <WalletScreen /> */}
-
-   
-      {/* Mobile Next Button */}
-      {isMobile && (
-        <div className="fixed bottom-4 right-4">
-          <button
-            onClick={nextStep}
-            className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg"
-          >
-            Next
-          </button>
-        </div>
-      )}
-    </>
+      <Routes>
+        <Route path="/" element={
+          <>
+            <HeroSection />
+            <Benefits />
+            <WhyShield />
+            <WhoWeAre />
+          </>
+        } />
+        <Route path="/registration" element={<MultiStepRegistrationForm />} />
+        <Route path="/verification" element={
+          <div className="max-w-7xl xl:flex mx-auto px-6 min-h-screen ">
+            <StepProgress currentStep={currentStep} setCurrentStep={setCurrentStep} />
+            {currentStep === 1 && <VerifyDetails nextStep={nextStep} />}
+            {currentStep === 2 && <IdentityVerification nextStep={nextStep} />}
+            {currentStep === 3 && <Deposit nextStep={nextStep} />}
+            {/* {isMobile && (
+              <div className="fixed bottom-4 right-4">
+                <button
+                  onClick={nextStep}
+                  className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg"
+                >
+                  Next
+                </button>
+              </div>
+            )} */}
+          </div>
+        } />
+        <Route path="/transactions" element={<TransactionHistoryScreen />} />
+        <Route path="/on-off-ramp" element={<OnOffRampScreen />} />
+        <Route path="/wallet" element={<WalletScreen />} />
+        <Route path="/user/auth" element={<AuthForm />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      </>
   );
 };
 

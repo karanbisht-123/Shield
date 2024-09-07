@@ -1,259 +1,47 @@
-// import React, { useState, useRef, useCallback } from 'react';
-// import { FaCamera, FaUpload, FaUser, FaCheckCircle } from 'react-icons/fa';
-
-// const FileUpload = ({ label, icon: Icon, onFileChange, previewUrl, error }) => {
-//   const fileInputRef = useRef(null);
-
-//   const handleFileChange = (e) => {
-//     const file = e.target.files[0];
-//     if (file) {
-//       onFileChange(file);
-//     }
-//   };
-
-//   return (
-//     <div className="bg-white rounded-lg shadow-md overflow-hidden">
-//       <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 flex items-center gap-2 text-white">
-//         <Icon className="w-5 h-5" />
-//         <span className="font-semibold">{label}</span>
-//       </div>
-//       <div 
-//         className="relative flex items-center justify-center border-2 border-blue-300 border-dashed rounded-lg p-4 h-48 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
-//         onClick={() => fileInputRef.current.click()}
-//       >
-//         {previewUrl ? (
-//           <img src={previewUrl} alt="Preview" className="max-h-full max-w-full object-contain rounded" />
-//         ) : (
-//           <div className="text-center text-gray-500">
-//             <p>Drag & drop or click to upload</p>
-//           </div>
-//         )}
-//         <input
-//           ref={fileInputRef}
-//           type="file"
-//           className="hidden"
-//           onChange={handleFileChange}
-//           accept="image/*"
-//         />
-//       </div>
-//       {error && (
-//         <div className="p-2 bg-red-100 text-red-700 text-sm">
-//           {error}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// const IdentityVerification = ({ nextStep }) => {
-//   const [idFile, setIdFile] = useState(null);
-//   const [selfieFile, setSelfieFile] = useState(null);
-//   const [idPreview, setIdPreview] = useState(null);
-//   const [selfiePreview, setSelfiePreview] = useState(null);
-//   const [idError, setIdError] = useState('');
-//   const [selfieError, setSelfieError] = useState('');
-//   const [isCameraActive, setIsCameraActive] = useState(false);
-//   const videoRef = useRef(null);
-//   const streamRef = useRef(null);
-
-//   const handleFileChange = useCallback((setter, previewSetter) => (file) => {
-//     setter(file);
-//     const reader = new FileReader();
-//     reader.onloadend = () => {
-//       previewSetter(reader.result);
-//     };
-//     reader.readAsDataURL(file);
-//   }, []);
-
-//   const validateForm = useCallback(() => {
-//     let isValid = true;
-
-//     if (!idFile) {
-//       setIdError('ID file is required.');
-//       isValid = false;
-//     } else {
-//       setIdError('');
-//     }
-
-//     if (!selfieFile) {
-//       setSelfieError('Selfie is required.');
-//       isValid = false;
-//     } else {
-//       setSelfieError('');
-//     }
-
-//     return isValid;
-//   }, [idFile, selfieFile]);
-
-//   const handleSubmit = useCallback(() => {
-//     if (validateForm()) {
-//       nextStep();
-//     }
-//   }, [validateForm, nextStep]);
-
-//   const startCamera = useCallback(async () => {
-//     try {
-//       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-//       if (videoRef.current) {
-//         videoRef.current.srcObject = stream;
-//         streamRef.current = stream;
-//         setIsCameraActive(true);
-//       }
-//     } catch (err) {
-//       console.error("Error accessing camera:", err);
-//     }
-//   }, []);
-
-//   const stopCamera = useCallback(() => {
-//     if (streamRef.current) {
-//       streamRef.current.getTracks().forEach(track => track.stop());
-//       setIsCameraActive(false);
-//     }
-//   }, []);
-
-//   const capturePhoto = useCallback(() => {
-//     const canvas = document.createElement('canvas');
-//     canvas.width = videoRef.current.videoWidth;
-//     canvas.height = videoRef.current.videoHeight;
-//     canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
-//     canvas.toBlob((blob) => {
-//       handleFileChange(setSelfieFile, setSelfiePreview)(blob);
-//       stopCamera();
-//     });
-//   }, [handleFileChange, stopCamera]);
-
-//   return (
-//     <div className="p-8 bg-gray-100 rounded-lg shadow-lg max-w-4xl mx-auto">
-//       <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Verify Your Identity</h2>
-      
-//       <div className="grid md:grid-cols-2 gap-8 mb-8">
-//         <FileUpload 
-//           label="Upload Your ID" 
-//           icon={FaUpload}
-//           onFileChange={handleFileChange(setIdFile, setIdPreview)}
-//           previewUrl={idPreview}
-//           error={idError}
-//         />
-//         <FileUpload 
-//           label="Upload a Selfie" 
-//           icon={FaUser}
-//           onFileChange={handleFileChange(setSelfieFile, setSelfiePreview)}
-//           previewUrl={selfiePreview}
-//           error={selfieError}
-//         />
-//       </div>
-
-//       <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
-//         <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 flex items-center gap-2 text-white">
-//           <FaCamera className="w-5 h-5" />
-//           <span className="font-semibold">Take a Photo</span>
-//         </div>
-//         <div className="p-4">
-//           <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
-//             <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline />
-//             {!isCameraActive && (
-//               <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 text-white">
-//                 <p>Camera is inactive</p>
-//               </div>
-//             )}
-//           </div>
-//           <div className="flex justify-center gap-4 mt-4">
-//             <button
-//               onClick={isCameraActive ? stopCamera : startCamera}
-//               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300"
-//             >
-//               {isCameraActive ? 'Stop Camera' : 'Start Camera'}
-//             </button>
-//             <button
-//               onClick={capturePhoto}
-//               disabled={!isCameraActive}
-//               className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
-//             >
-//               Capture Photo
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-
-//       <button
-//         onClick={handleSubmit}
-//         disabled={!(idFile && selfieFile)}
-//         className={`w-full py-3 px-4 rounded text-white font-semibold transition-colors duration-300 ${
-//           idFile && selfieFile
-//             ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
-//             : 'bg-gray-400 cursor-not-allowed'
-//         }`}
-//       >
-//         {idFile && selfieFile ? (
-//           <span className="flex items-center justify-center gap-2">
-//             <FaCheckCircle className="w-5 h-5" />
-//             Submit Verification
-//           </span>
-//         ) : (
-//           'Submit'
-//         )}
-//       </button>
-
-//       <div className="mt-8 bg-yellow-100 border-l-4 border-yellow-500 p-4 text-yellow-700">
-//         <p className="font-bold">Important:</p>
-//         <p>Please ensure that your ID is clear and all information is visible. Your selfie should clearly show your face.</p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default IdentityVerification;
-
-
-
 import React, { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { FaCamera, FaUpload, FaUser, FaCheckCircle } from 'react-icons/fa';
+import { FaCamera, FaUpload, FaUser, FaBuilding, FaTimes } from 'react-icons/fa';
 
-const FileUpload = ({ label, icon: Icon, onFileChange, previewUrl, error }) => {
+const FileUpload = ({ label, icon: Icon, onFileChange, previewUrl, onRemove }) => {
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      console.log(file , 'hii i am file ')
       onFileChange(file);
     }
   };
 
   return (
-    <motion.div 
-      className="bg-white rounded-lg shadow-md overflow-hidden"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="bg-gradient-to-br from-[#001F90] to-[#2087C2] p-4 flex items-center gap-2 text-white">
+    <div className="bg-gray-200 border border-gray-400 hover:border-gray-600 transition-colors duration-300 rounded-lg overflow-hidden relative">
+      <div className="p-4 border-b border-gray-400 flex items-center gap-2 text-black">
         <Icon className="w-5 h-5" />
-        <span className="font-semibold">{label}</span>
+        <span className='text-sm'>{label}</span>
+        {previewUrl && (
+          <button
+            className="absolute top-2 right-2 text-gray-900 hover:text-gray-100 transition-colors duration-300"
+            onClick={onRemove}
+          >
+            <FaTimes className="w-4 h-4" />
+          </button>
+        )}
       </div>
-      <div 
-        className="relative flex items-center justify-center border-2 border-blue-300 border-dashed rounded-lg p-4 h-48 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
+      <div
+        className="relative flex items-center justify-center border-2 border-gray-400 border-dashed  p-4 h-48 cursor-pointer"
         onClick={() => fileInputRef.current.click()}
       >
-        {previewUrl ? (
-          <motion.img 
-            src={previewUrl} 
-            alt="Preview" 
-            className="max-h-full max-w-full object-contain rounded"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          />
-        ) : (
-          <motion.div 
-            className="text-center text-gray-500"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <p>Drag & drop or click to upload</p>
-          </motion.div>
-        )}
+      {previewUrl ? (
+  <>
+    {console.log('Preview URL:', previewUrl)}
+    <img src={previewUrl} alt="Preview" className="max-h-full max-w-full object-contain rounded" />
+  </>
+) : (
+  <div className="text-center text-gray-400">
+    <p>Drag & drop or click to upload</p>
+  </div>
+)}
+
         <input
           ref={fileInputRef}
           type="file"
@@ -262,185 +50,244 @@ const FileUpload = ({ label, icon: Icon, onFileChange, previewUrl, error }) => {
           accept="image/*"
         />
       </div>
-      {error && (
-        <motion.div 
-          className="p-2 bg-red-100 text-red-700 text-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          {error}
-        </motion.div>
-      )}
-    </motion.div>
+    </div>
   );
 };
 
 const IdentityVerification = ({ nextStep }) => {
-  const [idFile, setIdFile] = useState(null);
-  const [selfieFile, setSelfieFile] = useState(null);
-  const [idPreview, setIdPreview] = useState(null);
-  const [selfiePreview, setSelfiePreview] = useState(null);
-  const [idError, setIdError] = useState('');
-  const [selfieError, setSelfieError] = useState('');
-  const [isCameraActive, setIsCameraActive] = useState(false);
+  const [verificationType, setVerificationType] = useState('individual');
+  const [documents, setDocuments] = useState({
+    idFile: null,
+    selfieFile: null,
+    businessReg: null,
+    addressProof: null,
+    ownerId: null,
+  });
+  const [previews, setPreviews] = useState({
+    idFilePreview: null,
+    selfiePreview: null,
+    businessRegPreview: null,
+    addressProofPreview: null,
+    ownerIdPreview: null,
+  });
+  const [errors, setErrors] = useState({});
   const videoRef = useRef(null);
-  const streamRef = useRef(null);
+  const [cameraStream, setCameraStream] = useState(null);
 
-  const handleFileChange = useCallback((setter, previewSetter) => (file) => {
-    setter(file);
+  // const handleFileChange = useCallback((fileType) => (file) => {
+  //   setDocuments((prev) => ({ ...prev, [fileType]: file }));
+
+  //   const reader = new FileReader();
+  //   reader.onloadend = () => {
+  //     setPreviews((prev) => ({ ...prev, [`${fileType}Preview`]: reader.result }));
+  //   };
+  //   reader.readAsDataURL(file);
+  // }, []);
+
+
+  const handleFileChange = useCallback((fileType) => (file) => {
+    setDocuments((prev) => ({ ...prev, [fileType]: file }));
+  
     const reader = new FileReader();
     reader.onloadend = () => {
-      previewSetter(reader.result);
+      console.log('File loaded:', reader.result);
+      console.log('fileType',fileType)
+      setPreviews((prev) => ({ ...prev, [`${fileType}Preview`]: reader.result }));
+      console.log(previews, 'hii i am prives')
     };
     reader.readAsDataURL(file);
   }, []);
+  
+  const handleRemoveFile = (fileType) => () => {
+    setDocuments((prev) => ({ ...prev, [fileType]: null }));
+    setPreviews((prev) => ({ ...prev, [`${fileType}Preview`]: null }));
+  };
 
   const validateForm = useCallback(() => {
-    let isValid = true;
-
-    if (!idFile) {
-      setIdError('ID file is required.');
-      isValid = false;
+    const newErrors = {};
+    if (verificationType === 'individual') {
+      if (!documents.idFile) newErrors.idFile = 'ID file is required.';
+      if (!documents.selfieFile) newErrors.selfieFile = 'Selfie file is required.';
     } else {
-      setIdError('');
+      if (!documents.businessReg) newErrors.businessReg = 'Business registration document is required.';
+      if (!documents.addressProof) newErrors.addressProof = 'Proof of address is required.';
+      if (!documents.ownerId) newErrors.ownerId = 'Owner ID is required.';
+      if (!documents.selfieFile) newErrors.selfieFile = 'Selfie file is required.';
     }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [verificationType, documents]);
 
-    if (!selfieFile) {
-      setSelfieError('Selfie is required.');
-      isValid = false;
-    } else {
-      setSelfieError('');
-    }
-
-    return isValid;
-  }, [idFile, selfieFile]);
-
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = () => {
     if (validateForm()) {
       nextStep();
+    } else {
+      alert('Please upload all required documents before submitting.');
     }
-  }, [validateForm, nextStep]);
+  };
 
-  const startCamera = useCallback(async () => {
+  const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setCameraStream(stream);
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        streamRef.current = stream;
-        setIsCameraActive(true);
       }
     } catch (err) {
-      console.error("Error accessing camera:", err);
+      console.error('Error accessing camera:', err);
     }
-  }, []);
+  };
 
-  const stopCamera = useCallback(() => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      setIsCameraActive(false);
+  const stopCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach((track) => track.stop());
+      setCameraStream(null);
     }
-  }, []);
+  };
 
-  const capturePhoto = useCallback(() => {
+  const capturePhoto = () => {
     const canvas = document.createElement('canvas');
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
     canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
     canvas.toBlob((blob) => {
-      handleFileChange(setSelfieFile, setSelfiePreview)(blob);
-      stopCamera();
+      handleFileChange('selfieFile')(blob);
+      setPreviews((prev) => ({ ...prev, selfiePreview: URL.createObjectURL(blob) }));
     });
-  }, [handleFileChange, stopCamera]);
+  };
 
   return (
-    <motion.div 
-      className=" lg:p-6 p-2  rounded-lg  max-w-4xl mx-auto"
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.7 }}
+    <motion.div
+      className=" xl:px-6 p-2   rounded-lg text-black max-w-2xl mx-auto lg:py-10"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Verify Your Identity</h2>
-      
-      <motion.div 
-        className="grid md:grid-cols-2 gap-8 mb-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        <FileUpload 
-          label="Upload Your ID" 
-          icon={FaUpload}
-          onFileChange={handleFileChange(setIdFile, setIdPreview)}
-          previewUrl={idPreview}
-          error={idError}
-        />
-        <FileUpload 
-          label="Upload a Selfie" 
-          icon={FaUser}
-          onFileChange={handleFileChange(setSelfieFile, setSelfiePreview)}
-          previewUrl={selfiePreview}
-          error={selfieError}
-        />
-      </motion.div>
+      <h2 className="text-3xl font-semibold mb-8">Verify Your Identity</h2>
 
-      <motion.div 
-        className="bg-white rounded-lg shadow-md overflow-hidden mb-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-      >
-        <div className="bg-gradient-to-br from-[#001F90] to-[#2087C2] p-4 flex items-center gap-2 text-white">
-          <FaCamera className="w-5 h-5" />
-          <span className="font-semibold">Take a Photo</span>
+      <div className="mb-6 flex justify-center">
+        <button
+          onClick={() => setVerificationType('individual')}
+          className={` text-white py-2 px-6 w-1/2 rounded-l-lg transition-colors duration-300 ${
+            verificationType === 'individual' ? 'bg-gradient-to-br from-[#001F90] to-[#2087C2]' : 'bg-gray-400'
+          }`}
+        >
+          Individual
+        </button>
+        <button
+          onClick={() => setVerificationType('business')}
+          className={` text-white  py-2 w-1/2  px-6 rounded-r-lg transition-colors duration-300 ${
+            verificationType === 'business' ? 'bg-gradient-to-br from-[#001F90] to-[#2087C2]' : 'bg-gray-400'
+          }`}
+        >
+          Business
+        </button>
+      </div>
+
+      {verificationType === 'individual' ? (
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <FileUpload
+            label="Upload Your ID"
+            icon={FaUpload}
+            onFileChange={handleFileChange('idFile')}
+            previewUrl={previews.idFilePreview}
+            onRemove={handleRemoveFile('idFile')}
+          />
+          <FileUpload
+            label="Upload a Selfie"
+            icon={FaUser}
+            onFileChange={handleFileChange('selfieFile')}
+            previewUrl={previews.selfiePreview}
+            onRemove={handleRemoveFile('selfieFile')}
+          />
         </div>
-        <div className="p-4">
-          <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
-            <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline />
-            {!isCameraActive && (
-              <motion.div 
-                className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 text-white"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <p>Camera is inactive</p>
-              </motion.div>
-            )}
+      ) : (
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <FileUpload
+            label="Business Registration Document"
+            icon={FaBuilding}
+            onFileChange={handleFileChange('businessReg')}
+            previewUrl={previews.businessRegPreview}
+            onRemove={handleRemoveFile('businessReg')}
+          />
+          <FileUpload
+            label="Upload Proof of Address"
+            icon={FaUpload}
+            onFileChange={handleFileChange('addressProof')}
+            previewUrl={previews.addressProofPreview}
+            onRemove={handleRemoveFile('addressProof')}
+          />
+          <FileUpload
+            label="Upload Owner's Government ID"
+            icon={FaUser}
+            onFileChange={handleFileChange('ownerId')}
+            previewUrl={previews.ownerIdPreview}
+            onRemove={handleRemoveFile('ownerId')}
+          />
+          <FileUpload
+            label="Upload a Selfie"
+            icon={FaCamera}
+            onFileChange={handleFileChange('selfieFile')}
+            previewUrl={previews.selfiePreview}
+            onRemove={handleRemoveFile('selfieFile')}
+          />
+        </div>
+      )}
+
+      {verificationType === 'individual' && (
+        <div className="text-red-500 mb-4">
+          {errors.idFile && <p>{errors.idFile}</p>}
+          {errors.selfieFile && <p>{errors.selfieFile}</p>}
+        </div>
+      )}
+      {verificationType === 'business' && (
+        <div className="text-red-500 mb-4">
+          {errors.businessReg && <p>{errors.businessReg}</p>}
+          {errors.addressProof && <p>{errors.addressProof}</p>}
+          {errors.ownerId && <p>{errors.ownerId}</p>}
+          {errors.selfieFile && <p>{errors.selfieFile}</p>}
+        </div>
+      )}
+
+      <div className="mb-8">
+        <div className="bg-gray-500 border border-gray-400 rounded-lg overflow-hidden">
+          <div className="p-4 border-b border-gray-400 flex items-center gap-2 text-gray-100">
+            <FaCamera className="w-5 h-5" />
+            <span>Take a Photo</span>
           </div>
-          <div className="flex justify-center gap-4 mt-4">
-            <motion.button
-              onClick={isCameraActive ? stopCamera : startCamera}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300"
-              whileTap={{ scale: 0.9 }}
-            >
-              {isCameraActive ? 'Stop Camera' : 'Start Camera'}
-            </motion.button>
-            <motion.button
-              onClick={capturePhoto}
-              disabled={!isCameraActive}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              whileTap={{ scale: 0.9 }}
-            >
+          <div className="relative aspect-video bg-black">
+            <video ref={videoRef} className="w-full h-full object-cover" autoPlay />
+          </div>
+          <div className="p-4 flex justify-center gap-4">
+            <button onClick={startCamera} className="bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white hover:bg-yellow-400 transition-colors duration-300 py-2 px-4 rounded">
+              Start Camera
+            </button>
+            <button onClick={stopCamera} className="bg-red-600 text-white hover:bg-red-400 transition-colors duration-300 py-2 px-4 rounded">
+              Stop Camera
+            </button>
+            <button onClick={capturePhoto} className="bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white hover:bg-yellow-400 transition-colors duration-300 py-2 px-4 rounded">
               Capture Photo
-            </motion.button>
+            </button>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.button
-        onClick={handleSubmit}
-        disabled={!(idFile && selfieFile)}
-        className={`w-full py-3 px-4 rounded text-white font-semibold transition-colors duration-300 ${
-          idFile && selfieFile
-            ? 'bg-gradient-to-br from-[#001F90] to-[#2087C2] hover:from-blue-600 hover:to-purple-700'
-            : 'bg-gray-400 cursor-not-allowed'
-        }`}
-        whileTap={{ scale: 0.9 }}
+      <motion.div
+        className="flex justify-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        Submit
-      </motion.button>
+        <button
+          onClick={handleSubmit}
+          className="w-full p-3 rounded-lg hover:bg-blue-600 bg-blue-600 text-white hover:bg-blue-700"
+        >
+          Submit
+        </button>
+      </motion.div>
     </motion.div>
   );
 };
 
 export default IdentityVerification;
+

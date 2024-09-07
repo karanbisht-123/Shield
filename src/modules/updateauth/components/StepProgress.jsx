@@ -163,7 +163,7 @@ const StepProgress = ({ currentStep, setCurrentStep }) => {
   };
 
   return (
-    <div className="relative flex flex-col md:flex-row md:w-1/4 bg-gradient-to-br from-[#001F90] to-[#2087C2]">
+    <div className="relative flex flex-col md:flex-row md:w-1/4 bg-gradient-to-br from-[#001F90] to-[#2087C2] lg:py-20">
       {/* Desktop Sidebar */}
       <div className="hidden md:block text-white bg-gradient-to-br from-[#001F90] to-[#2087C2] w-full md:rounded-lg md:sticky md:top-0">
         <div className="relative">

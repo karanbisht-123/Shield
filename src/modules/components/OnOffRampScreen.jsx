@@ -25,8 +25,8 @@ const OnOffRampScreen = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-200 p-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="max-w-5xl w-full bg-white rounded-lg  overflow-hidden">
         <div className="p-6">
           <h1 className="text-3xl font-bold mb-6 text-center">Funds Transfer</h1>
 
