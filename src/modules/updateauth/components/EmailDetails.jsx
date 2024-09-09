@@ -416,7 +416,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaCheckCircle } from 'react-icons/fa';
 
-const VerifyEmailDetails = ({ nextStep }) => {
+const EmailDetails = ({ nextStep }) => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isRegistered, setIsRegistered] = useState(false);
@@ -525,4 +525,4 @@ const VerifyEmailDetails = ({ nextStep }) => {
   );
 };
 
-export default VerifyEmailDetails;
+export default EmailDetails;

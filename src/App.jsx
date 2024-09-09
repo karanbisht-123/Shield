@@ -105,7 +105,7 @@ import OnOffRampScreen from "./modules/components/OnOffRampScreen";
 import StepProgress from "./modules/updateauth/components/StepProgress";
 import Deposit from "./modules/updateauth/components/Deposit";
 import IdentityVerification from "./modules/updateauth/components/IdentityVerification";
-import VerifyEMailDetails from "./modules/updateauth/components/VerifyEmailDetails";
+import EmailDetails from "./modules/updateauth/components/EmailDetails";
 import WalletScreen from "./modules/components/WalletScreen";
 import ScrollToTop from "./modules/components/ScrollToTop";
 import AuthForm from "./modules/components/AuthForm";
@@ -176,7 +176,7 @@ const App = () => {
                 setCurrentStep={setCurrentStep}
                 totalSteps={isEmailRegistered ? 2 : 3} 
               />
-              {currentStep === 1 && <VerifyEMailDetails nextStep={nextStep} />}
+              {currentStep === 1 && <EmailDetails nextStep={nextStep} />}
               {isEmailRegistered ? (
                 <>
                   {currentStep === 2 && <OTPVerificationScreen nextStep={nextStep} />}
