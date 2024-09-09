@@ -113,6 +113,7 @@ import VerifyUserDetails from "./modules/updateauth/components/VerifyuserDetails
 import OTPVerificationScreen from "./modules/updateauth/components/OTPVerificationScreen ";
 import CryptoSwap from "./modules/components/CryptoSwap";
 import BankWalletTabs from "./modules/components/BankWalletTabs";
+
 const App = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
