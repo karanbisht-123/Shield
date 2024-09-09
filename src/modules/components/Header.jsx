@@ -1,7 +1,7 @@
 import React from "react";
 import { FaHome, FaExchangeAlt, FaWallet, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
+import { FaUniversity } from "react-icons/fa";
 const Header = () => {
   const [activeTab, setActiveTab] = React.useState("Home");
   const navigate = useNavigate(); // Use navigate for redirection
@@ -13,7 +13,7 @@ const Header = () => {
         <div className="container mx-auto flex justify-between items-center py-4 px-6">
           {/* Logo Container */}
           <div className="logo_container flex items-center space-x-2">
-            <span className="text-2xl font-bold">SHIELD</span>
+            <a href="/" className="text-2xl font-bold">SHIELD</a>
           </div>
 
           {/* Navigation Section */}
@@ -27,6 +27,16 @@ const Header = () => {
                   Home
                 </button>
               </li>
+
+              {/* <li>
+                <button
+                  onClick={() => navigate("/bank-details")}
+                  className="hover:text-gray-400 transition duration-300"
+                >
+               Bank Details
+                </button>
+              </li> */}
+
               {/* <li>
                 <button
                   onClick={() => navigate("/transactions")}
@@ -72,6 +82,19 @@ const Header = () => {
           >
             <FaHome className="text-2xl" />
             <span className="text-xs">Home</span>
+          </button>
+
+             <button
+            className={`flex flex-col items-center ${
+              activeTab === "bank-details" ? "text-blue-500" : "text-gray-600"
+            } transition-colors`}
+            onClick={() => {
+              setActiveTab("bank-details");
+              navigate("/bank-details");
+            }}
+          >
+            <FaUniversity className="text-2xl" />
+            <span className="text-xs">Kyc Details</span>
           </button>
           {/* <button
             className={`flex flex-col items-center ${

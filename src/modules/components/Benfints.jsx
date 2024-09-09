@@ -2,7 +2,7 @@ import React from 'react';
 
 const BenefitCard = ({ imageUrl, title, description, extraClass = '' }) => {
   return (
-    <div className={`rounded-lg p-4 flex flex-col items-center text-center ${extraClass}`}>
+    <div className={`rounded-lg p-4 flex flex-col items-center text-center lg:${extraClass}`}>
       <div className="mb-4">
         <img src={imageUrl} alt={title} className="w-auto h-60 object-contain" />
       </div>

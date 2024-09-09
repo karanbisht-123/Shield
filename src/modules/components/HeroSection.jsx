@@ -1,9 +1,12 @@
 import React from 'react'
 import CryptoSwap from './CryptoSwap'
+import { useState } from 'react';
 const HeroSection = () => {
+  const [activeSection, setActiveSection] = useState("buy");
+
   return (
 
-  <section className='px-4 lg:flex lg:py-8 lg:pt-12'>
+  <section className=' lg:flex lg:py-8 lg:pt-12'>
     {/* <div className='veify_card md:hidden'>
      <div className='bg-[#2087C2] rounded-lg min-h-28 min-w-28 mt-6 px-4 py-2 flex flex-col  justify-start items-start gap-6 '>
       <h2 className='text-white'>Account verifaction</h2>
@@ -30,7 +33,7 @@ const HeroSection = () => {
 </div>
 
 
-    <CryptoSwap/>
+<CryptoSwap taskType="routeToVerification"     activeSection={activeSection}  setActiveSection={setActiveSection}/>
   </section>
   )
 }

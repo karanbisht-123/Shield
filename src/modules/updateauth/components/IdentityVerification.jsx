@@ -74,16 +74,6 @@ const IdentityVerification = ({ nextStep }) => {
   const videoRef = useRef(null);
   const [cameraStream, setCameraStream] = useState(null);
 
-  // const handleFileChange = useCallback((fileType) => (file) => {
-  //   setDocuments((prev) => ({ ...prev, [fileType]: file }));
-
-  //   const reader = new FileReader();
-  //   reader.onloadend = () => {
-  //     setPreviews((prev) => ({ ...prev, [`${fileType}Preview`]: reader.result }));
-  //   };
-  //   reader.readAsDataURL(file);
-  // }, []);
-
 
   const handleFileChange = useCallback((fileType) => (file) => {
     setDocuments((prev) => ({ ...prev, [fileType]: file }));
@@ -120,7 +110,27 @@ const IdentityVerification = ({ nextStep }) => {
 
   const handleSubmit = () => {
     if (validateForm()) {
-      nextStep();
+      const documentPromises = Object.entries(documents).map(([key, file]) => {
+        if (file) {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve({ [key]: reader.result });
+            reader.readAsDataURL(file);
+          });
+        }
+        return Promise.resolve({ [key]: null });
+      });
+
+      Promise.all(documentPromises).then((results) => {
+        const documentData = Object.assign({}, ...results);
+        const dataToStore = {
+          verificationType,
+          documents: documentData,
+        };
+        localStorage.setItem('identityVerificationData', JSON.stringify(dataToStore));
+        setIsSubmitted(true);
+        alert('Your identity verification data has been submitted and stored locally.');
+      });
     } else {
       alert('Please upload all required documents before submitting.');
     }

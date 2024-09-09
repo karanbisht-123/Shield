@@ -214,8 +214,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useOrder } from '../../custmhook/OrderContext';
-import { FaCheckCircle, FaTimes, FaCopy ,FaSpinner} from 'react-icons/fa';
-
+import { FaCheckCircle, FaTimes, FaCopy, FaSpinner } from 'react-icons/fa';
+import CryptoWalletUI from '../../components/CryptoWalletUi';
+import { useNavigate } from "react-router-dom";
 const Deposit = () => {
   const { order } = useOrder();
   const [errors, setErrors] = useState({});
@@ -223,19 +224,20 @@ const Deposit = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
+  const navigate = useNavigate()
   useEffect(() => {
     if (order) {
       setPaymentDetails(order.paymentDetails);
     }
   }, [order]);
 
-  if (!order) {
-    return (
-      <div className="max-w-lg mx-auto my-10 bg-white shadow-lg rounded-lg p-6">
-        <p className="text-center text-gray-500">No active orders.</p>
-      </div>
-    );
-  }
+  // if (!order) {
+  //   return (
+  //     <div className="max-w-lg mx-auto my-10 bg-white shadow-lg rounded-lg p-6">
+  //       <p className="text-center text-gray-500">No active orders.</p>
+  //     </div>
+  //   );
+  // }
 
   const handleSubmit = () => {
     const newErrors = {};
@@ -252,129 +254,25 @@ const Deposit = () => {
   };
 
   return (
-    <div className="max-w-5xl lg:min-w-[500px] mx-auto my-10 ">
-      <div className="bg-white rounded-lg overflow-hidden  ">
-        <div className="xl:p-6 p-4">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Deposit Funds</h2>
-          <div className="mb-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-            <h3 className="text-lg font-bold text-blue-700 mb-2">Current Order Status</h3>
-            <p className="text-blue-600">{`You are ${order.type}ing ${order.receiveAmount} ${order.receiveCurrency.toUpperCase()} for ${order.spendAmount} ${order.spendCurrency.toUpperCase()}`}</p>
-          </div>
+    <>
+    <header className=" hidden lg:flex items-center justify-between p-4 shadow-md bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white max-w-6xl mx-auto rounded-lg mt-10">
+      <nav>
+        <div 
+          className="cursor-pointer p-2 hover:bg-gray-700 transition-colors rounded-md" 
+          onClick={() => navigate('/bank-details')}
+        >
+          KYC Details
+        </div>
+      </nav>
+    </header>
+  
 
-          <div className="space-y-6">
-            {order.type === 'buy' && paymentDetails && (
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Bank Transfer Details</h3>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <p className="text-gray-600 font-medium">Bank Name:</p>
-                  <p className="text-gray-800">{paymentDetails.bankName}</p>
-                  <p className="text-gray-600 font-medium">Account Holder:</p>
-                  <p className="text-gray-800">{paymentDetails.accountHolderName}</p>
-                  <p className="text-gray-600 font-medium">Bank Account:</p>
-                  <p className="text-gray-800">{paymentDetails.bankAccount}</p>
-                  <p className="text-gray-600 font-medium">IFSC Code:</p>
-                  <p className="text-gray-800">{paymentDetails.bankIFSC}</p>
-                  <p className="text-gray-600 font-medium">Branch Name:</p>
-                  <p className="text-gray-800">{paymentDetails.branchName}</p>
-                </div>
-              </div>
-            )}
-            {order.type === 'sell' && paymentDetails && (
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Crypto Wallet Details</h3>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <p className="text-gray-600 font-medium">Wallet Address:</p>
-                  <p className="text-gray-800 break-all">{paymentDetails.cryptoWallet}</p>
-                  <p className="text-gray-600 font-medium">Wallet Provider:</p>
-                  <p className="text-gray-800">{paymentDetails.walletProvider}</p>
-                  <p className="text-gray-600 font-medium">Wallet Name:</p>
-                  <p className="text-gray-800">{paymentDetails.walletName}</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-          <button
-            onClick={handleSubmit}
-            disabled={isLoading}
-            className={`w-full ${isLoading ? 'bg-blue-400' : 'bg-blue-500 hover:bg-blue-600'} text-white py-3 px-4 rounded-lg font-semibold transition duration-300 flex items-center justify-center`}
-          >
-            {isLoading ? (
-              <>
-                <FaSpinner className="animate-spin mr-2" />
-                Processing...
-              </>
-            ) : (
-              'Confirm Deposit'
-            )}
-          </button>
-        </div>
-      </div>
 
-      {isSuccessModalOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 transition-opacity duration-300">
-    <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl transform transition-all duration-300 scale-100">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center">
-          <div className="bg-green-100 rounded-full p-2 mr-3">
-            <FaCheckCircle className="text-green-500 text-2xl" />
-          </div>
-          <h3 className="text-2xl font-bold text-gray-800">
-            Payment Successful
-          </h3>
-        </div>
-        <button
-          onClick={() => setIsSuccessModalOpen(false)}
-          className="text-gray-400 hover:text-gray-600 transition duration-150"
-        >
-          <FaTimes className="text-xl" />
-        </button>
-      </div>
-      <div className="bg-gray-50 rounded-lg p-4 mb-6">
-        <p className="text-sm text-gray-600 mb-2">Transaction ID</p>
-        <div className="flex items-center justify-between bg-white border border-gray-200 rounded px-3 py-2">
-          <span className="text-gray-800 font-medium">TX-{Math.random().toString(36).substr(2, 9).toUpperCase()}</span>
-          <button className="text-blue-500 hover:text-blue-600">
-            <FaCopy />
-          </button>
-        </div>
-      </div>
-      <div className="space-y-4 mb-6">
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600">Amount Paid</span>
-          <span className="text-gray-800 font-semibold">{order.spendAmount} {order.spendCurrency.toUpperCase()}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600">Received Amount</span>
-          <span className="text-gray-800 font-semibold">{order.receiveAmount} {order.receiveCurrency.toUpperCase()}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600">Date & Time</span>
-          <span className="text-gray-800">{new Date().toLocaleString()}</span>
-        </div>
-      </div>
-      <p className="text-green-600 text-center mb-6">
-        Your payment has been successfully processed. Thank you for using our service.
-      </p>
-      <div className="flex space-x-4">
-        <button
-          onClick={() => setIsSuccessModalOpen(false)}
-          className="flex-1 bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 transition duration-300"
-        >
-          Done
-        </button>
-        <button
-          onClick={() => {/* Add download receipt logic */}}
-          className="flex-1 bg-white text-green-500 border border-green-500 py-3 px-4 rounded-lg font-semibold hover:bg-green-50 transition duration-300"
-        >
-          Download Receipt
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-    </div>
+        <CryptoWalletUI />
+
+  
+  </>
+  
   );
 };
 

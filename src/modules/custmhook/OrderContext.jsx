@@ -7,6 +7,7 @@ const OrderContext = createContext();
 export const OrderProvider = ({ children }) => {
   const [order, setOrder] = useState(null); // Holds order status
 
+  console.log(order, 'hii i am order i want go there')
   const createOrder = (orderData) => {
     setOrder(orderData);
   };
