@@ -3,7 +3,7 @@ import React from "react";
 import { useEffect , useState} from "react";
 import { FaCheckCircle, FaUserCheck, FaDollarSign } from "react-icons/fa";
 import { motion } from "framer-motion";
-
+import { useEmailContext } from '../../custmhook/EmailContext';
 const StepProgress = ({ currentStep, setCurrentStep }) => {
   // const steps = [
   //   {
@@ -25,50 +25,52 @@ const StepProgress = ({ currentStep, setCurrentStep }) => {
   //     icon: <FaDollarSign size={30} />,
   //   },
   // ];
+  const { isRegistered } = useEmailContext();
   const [steps, setSteps] = useState([]);
-  useEffect(() => {
-    // Check if the user email exists in local storage
-    const userEmail = localStorage.getItem("registeredEmail");
 
-    // If email exists, show 2 steps, otherwise show 3 steps
-    if (userEmail) {
+
+  useEffect(() => {
+    // Update steps based on email registration status
+    if (isRegistered) {
       setSteps([
         {
-          label: "Verify Details",
+          label: 'Verify Details',
           description:
             "Let's verify your details. If you've transacted with us before, use the same email to checkout faster.",
           icon: <FaCheckCircle size={30} />,
         },
         {
-          label: "Verify OTP",
+          label: 'Verify OTP',
           description:
-            "Please enter the one-time password (OTP) to complete the transaction and receive your funds. Follow the instructions provided to finalize the process",
+            'Please enter the one-time password (OTP) to complete the transaction and receive your funds. Follow the instructions provided to finalize the process',
           icon: <FaDollarSign size={30} />,
         },
       ]);
     } else {
       setSteps([
         {
-          label: "Verify Details",
+          label: 'Verify Details',
           description:
             "Let's verify your details. Use the same email and mobile number to checkout faster.",
           icon: <FaCheckCircle size={30} />,
         },
         {
-          label: "Personl Details",
+          label: 'Personal Details',
           description:
-            "For new customers, some identification documents may be required. Upload a valid driver\'s license, passport, or national ID.",
+            "For new customers, some identification documents may be required. Upload a valid driver's license, passport, or national ID.",
           icon: <FaUserCheck size={30} />,
         },
         {
-          label: "Identity Verification",
+          label: 'Identity Verification',
           description:
-          "For new customers, some identification documents may be required. Upload a valid driver\'s license, passport, or national ID.",
+            "For new customers, some identification documents may be required. Upload a valid driver's license, passport, or national ID.",
           icon: <FaUserCheck size={30} />,
         },
       ]);
     }
-  }, []);
+  }, [isRegistered]); // Dependency array includes isRegistered to update steps when it changes
+
+  
   const handleStepClick = (index) => {
     setCurrentStep(index + 1); // Set the current step when clicked
   };

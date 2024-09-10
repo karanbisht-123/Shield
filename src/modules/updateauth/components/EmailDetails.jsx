@@ -412,34 +412,26 @@
 
 
 
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaCheckCircle } from 'react-icons/fa';
+import { useEmailContext } from '../../custmhook/EmailContext';
 
 const EmailDetails = ({ nextStep }) => {
-  const [email, setEmail] = useState('');
+  const { email, setEmail, isRegistered, checkEmailInApp } = useEmailContext();
   const [emailError, setEmailError] = useState('');
-  const [isRegistered, setIsRegistered] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
 
-  // Check if the user is already registered by checking localStorage
-  const checkIfRegistered = (enteredEmail) => {
-    const registeredEmail = localStorage.getItem('registeredEmail');
-    if (registeredEmail && registeredEmail === enteredEmail) {
-      setIsRegistered(true);
-    } else {
-      setIsRegistered(false);
-    }
-  };
-
+  // Simulate sending an OTP (after a delay)
   const sendOtp = () => {
-    // Simulate sending OTP (replace this with your API call)
     setTimeout(() => {
       setOtpSent(true);
-      nextStep({ email });
+      nextStep({ email }); // Proceed to the next step
     }, 1000);
   };
 
+  // Validate the email input
   const validateForm = () => {
     let isValid = true;
 
@@ -456,20 +448,23 @@ const EmailDetails = ({ nextStep }) => {
     return isValid;
   };
 
+  // Handle form submission
   const handleSubmit = () => {
     if (validateForm()) {
       if (isRegistered) {
-        sendOtp();
+        sendOtp(); // If registered, send OTP
       } else {
-        localStorage.setItem('registeredEmail', email);
-        nextStep({ email });
+        localStorage.setItem('registeredEmail', email); // Store email in localStorage
+        nextStep({ email }); // Proceed to the next step
       }
     }
   };
 
+  // Handle email input change
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    checkIfRegistered(e.target.value);
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    checkEmailInApp(newEmail); // Check if email is already registered
   };
 
   return (

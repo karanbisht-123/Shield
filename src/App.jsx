@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { useEmailContext } from "./modules/custmhook/EmailContext";
 import Header from "./modules/components/Header";
 import HeroSection from "./modules/components/HeroSection";
 import Benefits from "./modules/components/Benfints";
@@ -20,44 +21,51 @@ import VerifyUserDetails from "./modules/updateauth/components/VerifyUserDetails
 import OTPVerificationScreen from "./modules/updateauth/components/OTPVerificationScreen ";
 import CryptoSwap from "./modules/components/CryptoSwap";
 import BankWalletTabs from "./modules/components/BankWalletTabs";
-
+import KycDetails from "./modules/components/Kyc";
 const App = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const [isEmailRegistered, setIsEmailRegistered] = useState(false);
+  const { isRegistered } = useEmailContext();
+
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768); // Mobile breakpoints
+      setIsMobile(window.innerWidth < 768); 
     };
 
-    const checkEmailRegistration = () => {
-      const email = localStorage.getItem('registeredEmail');
-      if (email) {
-        setIsEmailRegistered(true);
-        // setCurrentStep(2);  // Skip to OTP verification if email exists
-      } else {
-        setIsEmailRegistered(false);
-      }
-    };
+    // const checkEmailRegistration = () => {
+    //   const email = localStorage.getItem('registeredEmail');
+    //   if (email) {
+    //     setIsEmailRegistered(true);
+    //   } else {
+    //     setIsEmailRegistered(false);
+    //   }
+    // };
 
     checkMobile();
-    checkEmailRegistration();
+    // checkEmailRegistration();
 
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // const nextStep = () => {
+  //   if (isEmailRegistered) {
+  //     setCurrentStep((prev) => (prev < 2 ? prev + 1 : 1));
+  //   } else {
+  //     setCurrentStep((prev) => (prev < 3 ? prev + 1 : 1));
+  //   }
+  // };
+
+
   const nextStep = () => {
-    // For 2 steps, go to the OTP verification and email verification only
-    if (isEmailRegistered) {
+    if (isRegistered) {
       setCurrentStep((prev) => (prev < 2 ? prev + 1 : 1));
     } else {
-      // For 3 steps, include VerifyUserDetails and IdentityVerification
       setCurrentStep((prev) => (prev < 3 ? prev + 1 : 1));
     }
   };
-
   return (
     <>
       <ScrollToTop />
@@ -75,17 +83,20 @@ const App = () => {
           }
         />
         <Route path="/registration" element={<MultiStepRegistrationForm />} />
+        
         <Route
           path="/verification"
           element={
             <div className="max-w-7xl xl:flex mx-auto px-6 min-h-screen">
+
+            
               <StepProgress
                 currentStep={currentStep}
                 setCurrentStep={setCurrentStep}
-                totalSteps={isEmailRegistered ? 2 : 3} 
+                totalSteps={isRegistered ? 2 : 3} 
               />
               {currentStep === 1 && <EmailDetails nextStep={nextStep} />}
-              {isEmailRegistered ? (
+              {isRegistered? (
                 <>
                   {currentStep === 2 && <OTPVerificationScreen nextStep={nextStep} />}
                 </>
@@ -100,7 +111,7 @@ const App = () => {
         />
         <Route path="/transactions" element={<TransactionHistoryScreen />} />
         <Route path="/on-off-ramp" element={<OnOffRampScreen />} />
-        <Route path="/bank-details" element={<BankWalletTabs />} />
+        <Route path="/account-details" element={<KycDetails />} />
         <Route path="/wallet" element={<WalletScreen />} />
         <Route path="/user/auth" element={<AuthForm />} />
         <Route path='/deposite' element ={<Deposit/>}/>

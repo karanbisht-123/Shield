@@ -259,9 +259,9 @@ const Deposit = () => {
       <nav>
         <div 
           className="cursor-pointer p-2 hover:bg-gray-700 transition-colors rounded-md" 
-          onClick={() => navigate('/bank-details')}
+          onClick={() => navigate('/account-details')}
         >
-          KYC Details
+          Account
         </div>
       </nav>
     </header>

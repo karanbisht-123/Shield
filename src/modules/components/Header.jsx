@@ -89,12 +89,12 @@ const Header = () => {
               activeTab === "bank-details" ? "text-blue-500" : "text-gray-600"
             } transition-colors`}
             onClick={() => {
-              setActiveTab("bank-details");
-              navigate("/bank-details");
+              setActiveTab("account-details");
+              navigate("/account-details");
             }}
           >
             <FaUniversity className="text-2xl" />
-            <span className="text-xs">Kyc Details</span>
+            <span className="text-xs">Account</span>
           </button>
           {/* <button
             className={`flex flex-col items-center ${
