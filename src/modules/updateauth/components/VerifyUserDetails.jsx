@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaCheckCircle, FaGlobe } from 'react-icons/fa';
 
-const VerifyUserDetails = ({ onSubmit, initialData }) => {
+const VerifyUserDetails = ({ onSubmit, initialData , nextStep }) => {
+
+  console.log(initialData, 'hii i am intail data -----')
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [company, setCompany] = useState('');
@@ -59,11 +61,19 @@ const VerifyUserDetails = ({ onSubmit, initialData }) => {
     return isValid;
   };
 
-  const handleSubmit = () => {
-    if (validateForm()) {
-      onSubmit({ ...initialData, firstName, lastName, company, country, promotion, terms });
-    }
-  };
+  // const handleSubmit = () => {
+  //   if (validateForm()) {
+  //     onSubmit({ ...initialData, firstName, lastName, company, country, promotion, terms });
+  //   }
+  // };
+
+    // Handle form submission
+    const handleSubmit = () => {
+   
+          nextStep(); 
+        
+      
+    };
 
   return (
     <motion.div
