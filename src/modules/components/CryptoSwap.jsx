@@ -3,6 +3,7 @@ import { FaChevronDown, FaInfoCircle, FaExchangeAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { motion, AnimatePresence } from "framer-motion";
+import { FaLock } from "react-icons/fa6";
 import {
   setSpendAmount,
   setReceiveAmount,
@@ -330,31 +331,51 @@ const CryptoSwap = ({ taskType }) => {
           ))}
         </div>
       </motion.div>
-
       <motion.button
-        whileHover={{ scale: 1 }}
-        whileTap={{ scale: 0.90 }}
-        className="w-full bg-white text-blue-600 p-4 rounded-lg font-semibold hover:bg-opacity-90 transition-colors shadow-lg"
-        onClick={handleCreateOrder}
-        disabled={loading}
-      >
-        {loading ? "LOADING..." : `CONTINUE`}
-      </motion.button>
-      <div className={registerButton}>
-      <div className="flex items-center space-x-3">
-        {/* <Info className="h-5 w-5 text-yellow-500" /> */}
-        <p className="text-sm text-gray-700">
-          Not registered yet? Please{' '}
-          <a 
-            href="/auth/register" 
-            className="font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-300"
-          >
-            register here
-          </a>{' '}
-          
-        </p>
-      </div>
+  whileHover={{ scale: 1 }}
+  whileTap={{ scale: 0.90 }}
+  className={`w-full bg-white text-blue-600 p-4 rounded-lg font-semibold hover:bg-opacity-90 transition-colors shadow-lg ${
+    (taskType === "step_2" || loading) ? "cursor-not-allowed opacity-50" : ""
+  }`}
+  onClick={handleCreateOrder}
+  disabled={loading || taskType === "step_2"} 
+>
+  {loading ? (
+    "LOADING..."
+  ) : taskType === "step_2" ? (
+    <span className="flex items-center justify-center">
+      <FaLock className="mr-2" /> LOCKED
+    </span>
+  ) : (
+    `CONTINUE`
+  )}
+</motion.button>
+
+{
+  taskType ===  "step_2" ? (
+
+
+    <div className="mt-2 text-lg">
+     <h2>Please Complete Your KYC to Unlock the Create Order Feature</h2>
+
     </div>
+  ):( <div className={registerButton}>
+    <div className="flex items-center space-x-3">
+      {/* <Info className="h-5 w-5 text-yellow-500" /> */}
+      <p className="text-sm text-gray-700">
+        Not registered yet? Please{' '}
+        <a 
+          href="/auth/register" 
+          className="font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-300"
+        >
+          register here
+        </a>{' '}
+        
+      </p>
+    </div>
+  </div>)
+}
+     
 
 <AnimatePresence>
         {modalStatus && (

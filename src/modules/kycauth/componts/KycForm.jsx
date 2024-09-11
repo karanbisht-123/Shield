@@ -11,7 +11,8 @@ import DocumentUploadStep from './DocumentUploadStep';
 import UserRegister from '../../updateauth/components/UserRegiste';
 import OTPVerificationScreen from '../../updateauth/components/OTPVerificationScreen ';
 import Modal from '../../helper/Modal';
-
+import CryptoSwap from '../../components/CryptoSwap';
+import PasswordCreationScreen from './PasswordCreationScreen';
 // Sidebar Component
 const Sidebar = ({ currentStep, isVerificationMode }) => {
   const steps = isVerificationMode
@@ -178,8 +179,10 @@ const KycForm = () => {
         case 1:
           console.log("Rendering EmailStep");
           return <EmailStep />;
+          // return <OTPVerificationScreen />;
         case 2:
           console.log("Rendering OTPVerificationScreen");
+          // return <PasswordCreationScreen />;
           return <OTPVerificationScreen />;
         default:
           console.log("Unknown step in verification mode");
@@ -193,7 +196,8 @@ const KycForm = () => {
           return <UserRegister />;
         case 2:
           console.log("Rendering PersonalInfoStep");
-          return <PersonalInfoStep />;
+          // return <PersonalInfoStep />;
+          return <CryptoSwap taskType="step_2"/>;
         case 3:
           console.log("Rendering DocumentUploadStep");
           return <DocumentUploadStep />;

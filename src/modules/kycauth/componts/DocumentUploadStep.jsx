@@ -441,7 +441,7 @@ const DocumentUploadStep = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg ">
       <h2 className="text-3xl font-semibold mb-8">Verify Your Identity</h2>
 
       <div className="mb-6 flex justify-center">

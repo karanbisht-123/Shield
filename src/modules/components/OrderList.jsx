@@ -126,11 +126,11 @@ const OrderList = () => {
               <h3 className="mt-4 text-lg font-medium text-gray-900">Order Successful!</h3>
               <p className="mt-2 text-sm text-gray-500">
                 Your transaction has been processed successfully.
-                Your assets are now available in your account
+                Your assets are now available in your account.
               </p>
               <div className="mt-4">
                 <a
-                   href='/transactions'
+                  href='/transactions'
                   className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm"
                 >
                   View Transaction
@@ -143,6 +143,9 @@ const OrderList = () => {
     </AnimatePresence>
   );
 
+  // Extract the first order from the array or set to null if empty
+  const [firstOrder] = orders || [null];
+
   return (
     <div className="container mx-auto px-4 sm:px-6 py-6 bg-gray-100 min-h-screen">
       {/* <motion.h2 
@@ -153,34 +156,26 @@ const OrderList = () => {
       >
         Order List
       </motion.h2> */}
-      <motion.ul 
-        className="space-y-6 sm:space-y-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        {orders?.map((order, index) => (
-          <motion.li 
-            key={order?.id} 
-            className="bg-white rounded-xl shadow-lg overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-          >
-            <div className="p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
-                <span className="text-base sm:text-lg font-semibold text-gray-700 mb-2 sm:mb-0">{order?.type}</span>
-                <div className="flex items-center space-x-2 text-xs sm:text-sm">
-                  <span className="font-medium text-gray-500">{order?.spendAmount} {order?.spendCurrency}</span>
-                  {order?.type === 'cryptoToFiat' ? 
-                    <FaArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" /> : 
-                    <FaArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
-                  }
-                  <span className="font-medium text-gray-500">{order?.receiveAmount} {order?.receiveCurrency}</span>
-                </div>
+      {firstOrder ? (
+        <motion.div 
+          className="bg-white rounded-xl shadow-lg overflow-hidden"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
+              <span className="text-base sm:text-lg font-semibold text-gray-700 mb-2 sm:mb-0">{firstOrder?.type}</span>
+              <div className="flex items-center space-x-2 text-xs sm:text-sm">
+                <span className="font-medium text-gray-500">{firstOrder?.spendAmount} {firstOrder?.spendCurrency}</span>
+                {firstOrder?.type === 'cryptoToFiat' ? 
+                  <FaArrowRight className="w-3 h-3" /> : <FaArrowLeft className="w-3 h-3" />}
+                <span className="font-medium text-gray-500">{firstOrder?.receiveAmount} {firstOrder?.receiveCurrency}</span>
               </div>
-              <PaymentDetails order={order} />
-              <motion.button
+            </div>
+            <PaymentDetails order={firstOrder} />
+         
+            <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`mt-4 w-full py-2 px-4 rounded-md text-white font-medium ${
@@ -191,10 +186,11 @@ const OrderList = () => {
               >
                 {processing ? 'Processing...' : 'I Have Paid'}
               </motion.button>
-            </div>
-          </motion.li>
-        ))}
-      </motion.ul>
+          </div>
+        </motion.div>
+      ) : (
+        <div className="text-center text-gray-500">No orders available.</div>
+      )}
       <SuccessModal />
     </div>
   );

@@ -151,6 +151,7 @@ import AuthForm from "./modules/components/AuthForm";
 import KycDetails from "./modules/components/Kyc";
 import KycForm from "./modules/kycauth/componts/KycForm";
 import OrderList from "./modules/components/OrderList";
+import PasswordCreationScreen from "./modules/kycauth/componts/PasswordCreationScreen";
 const App = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
