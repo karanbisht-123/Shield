@@ -1,54 +1,46 @@
+
+
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setEmail } from '../../lib/slice/KycSlice';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaCheckCircle } from 'react-icons/fa';
-import { useEmailContext } from '../../custmhook/EmailContext';
 
-const EmailDetails = ({ nextStep }) => {
-  const { email, setEmail, isRegistered, checkEmailInApp } = useEmailContext();
+const EmailStep = () => {
+  const dispatch = useDispatch();
+  const { email } = useSelector((state) => state.kyc);
   const [emailError, setEmailError] = useState('');
+  const [isRegistered, setIsRegistered] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
 
-  const sendOtp = () => {
-    setTimeout(() => {
-      setOtpSent(true);
-      nextStep({ email }); 
-    }, 1000);
-  };
-
-  // Validate the email input
-  const validateForm = () => {
-    let isValid = true;
-
-    if (!email) {
-      setEmailError('Email address is required.');
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError('');
-    }
-
-    return isValid;
-  };
-
-  // Handle form submission
-  const handleSubmit = () => {
-    if (validateForm()) {
-      if (isRegistered) {
-        sendOtp(); // If registered, send OTP
-      } else {
-        localStorage.setItem('registeredEmail', email); // Store email in localStorage
-        nextStep({ email }); // Proceed to the next step
-      }
-    }
-  };
-
-  // Handle email input change
   const handleEmailChange = (e) => {
-    const newEmail = e.target.value;
-    setEmail(newEmail);
-    checkEmailInApp(newEmail); // Check if email is already registered
+    dispatch(setEmail(e.target.value));
+    setEmailError('');
+    setIsRegistered(false);
+    setOtpSent(false);
+  };
+
+  const validateEmail = (email) => {
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const handleSubmit = () => {
+    if (!validateEmail(email)) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
+
+    // Simulate checking if email is registered (replace with actual API call)
+    setIsRegistered(Math.random() > 0.5);
+
+    if (isRegistered) {
+      // Simulate sending OTP (replace with actual OTP sending logic)
+      setOtpSent(true);
+    } else {
+      // Proceed to next step (implement this based on your app's navigation logic)
+      console.log('Proceeding to next step');
+    }
   };
 
   return (
@@ -82,7 +74,7 @@ const EmailDetails = ({ nextStep }) => {
         )}
       </div>
 
-      <motion.button
+      {/* <motion.button
         onClick={handleSubmit}
         className={`w-full py-3 rounded-lg flex items-center justify-center gap-2 transition-colors duration-300 ${
           email ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-400 text-gray-700 cursor-not-allowed'
@@ -93,7 +85,7 @@ const EmailDetails = ({ nextStep }) => {
       >
         <FaCheckCircle />
         {isRegistered && !otpSent ? 'Send OTP' : 'Continue'}
-      </motion.button>
+      </motion.button> */}
 
       {otpSent && (
         <p className="text-green-500 text-sm mt-4">
@@ -104,4 +96,4 @@ const EmailDetails = ({ nextStep }) => {
   );
 };
 
-export default EmailDetails;
+export default EmailStep;

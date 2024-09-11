@@ -270,61 +270,9 @@ const CryptoWalletUI = () => {
 
   return (
   
-    <div className="pb-20 xl:pb-6 xl:my-12 max-w-6xl mx-auto bg-gradient-to-br from-[#001F90] to-[#2087C2] xl:rounded-xl shadow-lg xl:p-6 p-2 text-white">
+    <div className="">
       <div className="flex flex-col lg:flex-row lg:space-x-6 mt-6 lg:mt-0">
         <CryptoSwap taskType="logOrder" activeSection={activeSection}  setActiveSection={setActiveSection} />
-        <div className="w-full lg:w-1/2 mt-8  space-y-4 bg-white bg-opacity-20 rounded-lg p-4">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            {showDetails === "wallet" ? (
-              <>
-                <FaWallet className="mr-2" /> Wallet Details
-              </>
-            ) : (
-              <>
-                <FaUniversity className="mr-2" /> Bank Details
-              </>
-            )}
-          </h2>
-          
-          {showDetails === "wallet" ? (
-            <div>
-              <p className="mb-2 overflow-x-auto">
-                <span className="font-semibold">Address:</span> {walletDetails.address}
-              </p>
-              <p>
-                <span className="font-semibold">Balance:</span> {walletDetails.balance}
-              </p>
-            </div>
-          ) : (
-            <div>
-              <p className="mb-2">
-                <span className="font-semibold">Account Name:</span> {bankDetails.AccountName}
-              </p>
-              <p className="mb-2">
-                <span className="font-semibold">Account Number:</span> {bankDetails.AccountNumber}
-              </p>
-              <p className="mb-2">
-                <span className="font-semibold">Bank Name:</span> {bankDetails.BankName}
-              </p>
-              <p className="mb-2">
-                <span className="font-semibold">Routing Number:</span> {bankDetails.RoutingNumber}
-              </p>
-              <p className="mb-2">
-                <span className="font-semibold">Swift Code:</span> {bankDetails.SwiftCode}
-              </p>
-              <p className="mb-2">
-                <span className="font-semibold">Bank Address:</span> {bankDetails.BankAddress}
-              </p>
-            </div>
-          )}
-
-          <div className="flex flex-col text-start text-balance gap-2 items-start lg:flex-row lg:items-center">
-            <FaInfoCircle className="text-gray-300" size={25} />
-            <p className="text-balance text-start text-white">
-              Please ensure all details are correct before initiating a transaction.
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );

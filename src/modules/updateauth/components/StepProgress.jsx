@@ -5,26 +5,7 @@ import { FaCheckCircle, FaUserCheck, FaDollarSign } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useEmailContext } from '../../custmhook/EmailContext';
 const StepProgress = ({ currentStep, setCurrentStep }) => {
-  // const steps = [
-  //   {
-  //     label: "Verify Details",
-  //     description:
-  //       "Let's make sure you're real by verifying your details. If you've transacted with us before, use the same email and mobile number to checkout faster.",
-  //     icon: <FaCheckCircle size={30} />,
-  //   },
-  //   {
-  //     label: "Identity Verification",
-  //     description:
-  //       "For new customers, some identification documents may be required. The process should only take a couple of minutes and you’ll need to upload a photo of either a valid driver\'s license, passport, or national ID.",
-  //     icon: <FaUserCheck size={30} />,
-  //   },
-  //   {
-  //     label: "Deposit",
-  //     description:
-  //       "Follow the instructions to complete the transaction and receive funds in your account.",
-  //     icon: <FaDollarSign size={30} />,
-  //   },
-  // ];
+
   const { isRegistered } = useEmailContext();
   const [steps, setSteps] = useState([]);
 
@@ -70,7 +51,7 @@ const StepProgress = ({ currentStep, setCurrentStep }) => {
     }
   }, [isRegistered]); // Dependency array includes isRegistered to update steps when it changes
 
-  
+
   const handleStepClick = (index) => {
     setCurrentStep(index + 1); // Set the current step when clicked
   };

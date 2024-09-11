@@ -37,7 +37,7 @@ const Header = () => {
                 </button>
               </li> */}
 
-              {/* <li>
+              <li>
                 <button
                   onClick={() => navigate("/transactions")}
                   className="hover:text-gray-400 transition duration-300"
@@ -45,7 +45,7 @@ const Header = () => {
                   Transactions
                 </button>
               </li>
-              <li>
+              {/* <li>
                 <button
                   onClick={() => navigate("/on-off-ramp")}
                   className="hover:text-gray-400 transition duration-300"
@@ -90,7 +90,7 @@ const Header = () => {
             } transition-colors`}
             onClick={() => {
               setActiveTab("account-details");
-              navigate("/account-details");
+              navigate("/auth/register");
             }}
           >
             <FaUniversity className="text-2xl" />
@@ -107,7 +107,7 @@ const Header = () => {
           >
             <FaExchangeAlt className="text-2xl" />
             <span className="text-xs">On off ramp</span>
-          </button>
+          </button> */}
           <button
             className={`flex flex-col items-center ${
               activeTab === "Wallet" ? "text-blue-500" : "text-gray-600"
@@ -120,7 +120,7 @@ const Header = () => {
             <FaWallet className="text-2xl" />
             <span className="text-xs">Transactions</span>
           </button>
-          <button
+          {/* <button
             className={`flex flex-col items-center ${
               activeTab === "Account" ? "text-blue-500" : "text-gray-600"
             } transition-colors`}

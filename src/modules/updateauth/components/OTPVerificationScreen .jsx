@@ -72,7 +72,7 @@ const OTPVerificationScreen = ({ onVerify, email }) => {
       </div>
 
       <div className="mb-6">
-        <div className="flex justify-center space-x-2 lg:space-x-8">
+        <div className="flex justify-start space-x-2 lg:space-x-8">
           {otp.map((data, index) => (
             <motion.input
               key={index}
@@ -102,7 +102,7 @@ const OTPVerificationScreen = ({ onVerify, email }) => {
         </motion.p>
       )}
 
-      <motion.button
+      {/* <motion.button
         onClick={verifyOTP}
         disabled={otp.some((digit) => !digit) || isVerifying}
         className={`w-full py-3 rounded-lg flex items-center justify-center gap-2 transition-colors duration-300 ${
@@ -125,7 +125,7 @@ const OTPVerificationScreen = ({ onVerify, email }) => {
             Verify OTP
           </>
         )}
-      </motion.button>
+      </motion.button> */}
 
       <div className="mt-6">
         <p className="text-gray-600">Didn't receive the code?</p>

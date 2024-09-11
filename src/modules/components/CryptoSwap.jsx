@@ -1,25 +1,43 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaChevronDown, FaInfoCircle, FaExchangeAlt } from "react-icons/fa";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  setSpendAmount,
+  setReceiveAmount,
+  setSpendCurrency,
+  setReceiveCurrency,
+  setActiveSection,
+  toggleCurrencies,
+  fetchCryptoList,
+  fetchExchangeRate,
+} from '../lib/slice/CryptoSlice';
 import { useOrder } from "../custmhook/OrderContext";
+import { addOrder } from "../lib/slice/OrderSlice";
 
-const CryptoSwap = ({ taskType,  activeSection,setActiveSection}) => {
+const CryptoSwap = ({ taskType }) => {
+  console.log(taskType, 'hii i am tsktype ========')
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { createOrder } = useOrder();
-  // const [activeSection, setActiveSection] = useState("buy");
-  const [spendAmount, setSpendAmount] = useState("100");
-  const [receiveAmount, setReceiveAmount] = useState("0");
-  const [spendCurrency, setSpendCurrency] = useState("usd");
-  const [receiveCurrency, setReceiveCurrency] = useState("bitcoin");
-  const [exchangeRate, setExchangeRate] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [cryptoList, setCryptoList] = useState([]);
+
+  const {
+    spendAmount,
+    receiveAmount,
+    spendCurrency,
+    receiveCurrency,
+    exchangeRate,
+    loading,
+    error,
+    cryptoList,
+    activeSection,
+  } = useSelector(state => state.cryptoFiat);
+
   const [showSpendDropdown, setShowSpendDropdown] = useState(false);
   const [showReceiveDropdown, setShowReceiveDropdown] = useState(false);
-  const [paymentStatus , setPaymentStatus] = useState("faild")
-  const [modalstatus , setmodalstaus] = useState(false)
-  const navigate = useNavigate();
+  const [paymentStatus, setPaymentStatus] = useState("failed");
+  const [modalStatus, setModalStatus] = useState(false);
 
   const networkFeePercentage = 0.001;
   const exchangeFeePercentage = 0.005;
@@ -27,39 +45,16 @@ const CryptoSwap = ({ taskType,  activeSection,setActiveSection}) => {
   const fiatCurrencies = ["usd", "eur", "gbp", "jpy"];
 
   useEffect(() => {
-    fetchCryptoList();
-    fetchExchangeRate();
-  }, [spendCurrency, receiveCurrency]);
+    dispatch(fetchCryptoList());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchExchangeRate({ receiveCurrency, spendCurrency }));
+  }, [dispatch, spendCurrency, receiveCurrency]);
 
   useEffect(() => {
     calculateReceiveAmount();
   }, [spendAmount, exchangeRate, activeSection]);
-
-  const fetchCryptoList = async () => {
-    try {
-      const response = await axios.get(
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false"
-      );
-      setCryptoList(response.data);
-    } catch (err) {
-      console.error("Error fetching crypto list:", err);
-    }
-  };
-
-  const fetchExchangeRate = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const response = await axios.get(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${receiveCurrency}&vs_currencies=${spendCurrency}`
-      );
-      setExchangeRate(response.data[receiveCurrency][spendCurrency]);
-    } catch (err) {
-      setError("Failed to fetch exchange rate. Please try again.");
-      console.error("Error fetching exchange rate:", err);
-    }
-    setLoading(false);
-  };
 
   const calculateReceiveAmount = () => {
     if (exchangeRate && spendAmount) {
@@ -68,68 +63,61 @@ const CryptoSwap = ({ taskType,  activeSection,setActiveSection}) => {
       const exchangeFee = amount * exchangeFeePercentage;
       const amountAfterFees = amount - networkFee - exchangeFee;
       const received =
-        activeSection === "buy"
+        activeSection === "cryptoToFiat"
           ? amountAfterFees / exchangeRate
           : amountAfterFees * exchangeRate;
-      setReceiveAmount(received.toFixed(8));
+      dispatch(setReceiveAmount(received.toFixed(8)));
     }
   };
 
-  const handleSpendAmountChange = (e) => {
-    setSpendAmount(e.target.value);
+  const handleAmountChange = (e, field) => {
+    const amount = e.target.value;
+    if (field === 'spend') {
+      dispatch(setSpendAmount(amount));
+      if (exchangeRate) {
+        const received = activeSection === "cryptoToFiat"
+          ? (amount / exchangeRate) * (1 - networkFeePercentage - exchangeFeePercentage)
+          : amount * exchangeRate * (1 - networkFeePercentage - exchangeFeePercentage);
+        dispatch(setReceiveAmount(received.toFixed(8)));
+      }
+    } else {
+      dispatch(setReceiveAmount(amount));
+      if (exchangeRate) {
+        const spent = activeSection === "cryptoToFiat"
+          ? amount * exchangeRate / (1 - networkFeePercentage - exchangeFeePercentage)
+          : (amount / exchangeRate) / (1 - networkFeePercentage - exchangeFeePercentage);
+        dispatch(setSpendAmount(spent.toFixed(2)));
+      }
+    }
+  };
+
+  const handleCurrencyChange = (currency, type) => {
+    if (type === 'spend') {
+      dispatch(setSpendCurrency(currency));
+    } else {
+      dispatch(setReceiveCurrency(currency));
+    }
+    setShowSpendDropdown(false);
+    setShowReceiveDropdown(false);
   };
 
   const generateRandomBankDetails = () => {
-    const randomBankAccount = Math.floor(
-      1000000000 + Math.random() * 9000000000
-    ).toString();
-    return {
-      bankAccount: randomBankAccount,
-      bankName: "Acme Bank",
-      bankIFSC: "ACME000" + Math.floor(1000 + Math.random() * 9000).toString(),
-      accountHolderName: "John Doe",
-      branchName: "Downtown Branch",
-    };
+    // ... (keep the existing implementation)
   };
 
   const generateRandomCryptoWallet = () => {
-    const randomAddress =
-      "0x" + Math.random().toString(16).substr(2, 40).toUpperCase();
-    return {
-      cryptoWallet: randomAddress,
-      walletProvider: "CryptoVault",
-      walletName: "JohnsWallet",
-    };
+    // ... (keep the existing implementation)
   };
-
-  // const handleCreateOrder = () => {
-  //   const paymentDetails =
-  //     activeSection === "buy"
-  //       ? generateRandomBankDetails()
-  //       : generateRandomCryptoWallet();
-
-  //   const orderData = {
-  //     type: activeSection,
-  //     spendAmount,
-  //     receiveAmount,
-  //     spendCurrency,
-  //     receiveCurrency,
-  //     paymentDetails,
-  //   };
-
-  //   createOrder(orderData);
-
-  //   navigate("/verification");
-  // };
 
 
   const handleCreateOrder = () => {
     const paymentDetails =
-      activeSection === "buy"
+      activeSection === "cryptoToFiat"
         ? generateRandomBankDetails()
         : generateRandomCryptoWallet();
 
     const orderData = {
+      id: new Date().toISOString(), 
       type: activeSection,
       spendAmount,
       receiveAmount,
@@ -138,83 +126,69 @@ const CryptoSwap = ({ taskType,  activeSection,setActiveSection}) => {
       paymentDetails,
     };
 
-    createOrder(orderData);
+    // Dispatch action to add order
+    dispatch(addOrder(orderData));
 
     if (taskType === "routeToVerification") {
-      navigate("/verification"); 
+      navigate("/auth/verify");
     } else if (taskType === "logOrder") {
-      setmodalstaus(true)
-      setPaymentStatus(true)
 
-      setTimeout(() => {
-        setPaymentStatus(false)
-      }, 3000);
-   
-      console.log("hello i am payment success ")
-      console.log("Order Created:", orderData); 
-    } 
-  };
-
-
-  const toggleCurrencies = () => {
-    const tempCurrency = spendCurrency;
-    const tempAmount = spendAmount;
-    setSpendCurrency(receiveCurrency);
-    setReceiveCurrency(tempCurrency);
-    setSpendAmount(receiveAmount);
-    setReceiveAmount(tempAmount);
+      navigate("/creat-order");
+      console.log("Order Created:", orderData);
+    }
   };
 
   const networkFee = parseFloat(spendAmount) * networkFeePercentage;
   const exchangeFee = parseFloat(spendAmount) * exchangeFeePercentage;
   const total = parseFloat(spendAmount) + networkFee + exchangeFee;
 
+  const containerClass = taskType === 'logOrder'
+  ? 'w-full xl:mt-4 md:mt-0 max-w-5xl mx-auto bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white p-5 xl:rounded-2xl shadow-2xl'
+  : 'w-full xl:mt-4 md:mt-0 max-w-lg mx-auto bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white p-5 xl:rounded-2xl shadow-2xl';
+
+  const registerButton = taskType === 'logOrder' ? 'hidden':'px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-lg shadow-sm mt-4'
   return (
-
-    <>
-
-
-{/* 
-    {
-      paymentStatus ? <PaymentSuccessModal modalstaus={modalstatus}/> :''
-    } */}
-   
-    <div className="w-full xl:mt-8 md:mt-0 max-w-lg mx-auto bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white p-6 xl:rounded-xl shadow-lg">
-      <h1 className="text-2xl font-bold mb-6 text-center">Crypto Swap</h1>
-
-      <div className="flex justify-center mb-6 bg-white bg-opacity-20 rounded-lg p-1">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+      className={containerClass}
+    >
+      <div className="flex justify-center mb-4 bg-white bg-opacity-20 rounded-lg p-1 relative overflow-hidden">
+        <motion.div
+          className="absolute top-0 left-0 w-1/2 h-full bg-white rounded-lg"
+          animate={{ x: activeSection === "cryptoToFiat" ? "0%" : "100%" }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        />
         <button
-          className={`px-4 py-2 w-1/2 rounded-lg font-semibold transition-colors ${
-            activeSection === "buy"
-              ? "bg-white text-blue-600"
-              : "text-white hover:bg-white hover:bg-opacity-10"
+          className={`px-6 py-3 w-1/2 rounded-lg font-semibold transition-colors relative z-10 ${
+            activeSection === "cryptoToFiat" ? "text-blue-600" : "text-white"
           }`}
-          onClick={() => setActiveSection("buy")}
+          onClick={() => dispatch(setActiveSection("cryptoToFiat"))}
         >
-          Buy coins
+          Crypto to Fiat
         </button>
         <button
-          className={`px-4 py-2 w-1/2 rounded-lg font-semibold transition-colors ${
-            activeSection === "sell"
-              ? "bg-white text-blue-600"
-              : "text-white hover:bg-white hover:bg-opacity-10"
+          className={`px-6 py-2 w-1/2 rounded-lg font-semibold transition-colors relative z-10 ${
+            activeSection === "fiatToCrypto" ? "text-blue-600" : "text-white"
           }`}
-          onClick={() => setActiveSection("sell")}
+          onClick={() => dispatch(setActiveSection("fiatToCrypto"))}
         >
-          Sell coins
+          Fiat to Crypto
         </button>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-4 relative">
         <label className="block text-sm font-medium mb-2">
-          {activeSection === "buy" ? "Spend" : "Sell"}
+          {activeSection === "fiatToCrypto" ? "Spend (Fiat)" : "Sell (Crypto)"}
         </label>
         <div className="relative">
           <input
             type="number"
             value={spendAmount}
-            onChange={handleSpendAmountChange}
-            className="w-full bg-white bg-opacity-20 p-3 rounded-lg text-white placeholder-gray-300"
+            onChange={(e) => handleAmountChange(e, 'spend')}
+            className="w-full bg-white bg-opacity-20 p-4 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="0.00"
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -225,46 +199,52 @@ const CryptoSwap = ({ taskType,  activeSection,setActiveSection}) => {
               {spendCurrency.toUpperCase()}
               <FaChevronDown className="ml-1 w-4 h-4" />
             </button>
-            {showSpendDropdown && (
-              <div className="absolute right-0 mt-12 w-56 rounded-md shadow-lg bg-white">
-                <div
-                  className="py-1"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="options-menu"
+            <AnimatePresence>
+              {showSpendDropdown && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-12 w-56 rounded-md shadow-lg bg-white"
                 >
-                  {(activeSection === "buy" ? fiatCurrencies : cryptoList).map(
-                    (currency) => (
-                      <button
-                        key={currency.id || currency}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
-                        role="menuitem"
-                        onClick={() => {
-                          setSpendCurrency(currency.id || currency);
-                          setShowSpendDropdown(false);
-                        }}
-                      >
-                        {(currency.symbol || currency).toUpperCase()}
-                      </button>
-                    )
-                  )}
-                </div>
-              </div>
-            )}
+                  <div
+                    className="py-1"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="options-menu"
+                  >
+                    {(activeSection === "fiatToCrypto" ? fiatCurrencies : cryptoList).map(
+                      (currency) => (
+                        <button
+                          key={currency.id || currency}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
+                          role="menuitem"
+                          onClick={() => handleCurrencyChange(currency.id || currency, 'spend')}
+                        >
+                          {(currency.symbol || currency).toUpperCase()}
+                        </button>
+                      )
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-4">
         <label className="block text-sm font-medium mb-2">
-          {activeSection === "buy" ? "Receive" : "For"}
+          {activeSection === "fiatToCrypto" ? "Receive (Crypto)" : "For (Fiat)"}
         </label>
         <div className="relative">
           <input
-            type="text"
+            type="number"
             value={receiveAmount}
-            readOnly
-            className="w-full bg-white bg-opacity-20 p-3 rounded-lg text-white"
+            onChange={(e) => handleAmountChange(e, 'receive')}
+            className="w-full bg-white bg-opacity-20 p-4 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="0.00"
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-3">
             <button
@@ -274,54 +254,57 @@ const CryptoSwap = ({ taskType,  activeSection,setActiveSection}) => {
               {receiveCurrency.toUpperCase()}
               <FaChevronDown className="ml-1 w-4 h-4" />
             </button>
-            {showReceiveDropdown && (
-              <div className="absolute right-0 mt-12 w-56 rounded-md shadow-lg bg-white">
-                <div
-                  className="py-1"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="options-menu"
+            <AnimatePresence>
+              {showReceiveDropdown && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-12 w-56 rounded-md shadow-lg bg-white"
                 >
-                  {(activeSection === "buy" ? cryptoList : fiatCurrencies).map(
-                    (currency) => (
-                      <button
-                        key={currency.id || currency}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
-                        role="menuitem"
-                        onClick={() => {
-                          setReceiveCurrency(currency.id || currency);
-                          setShowReceiveDropdown(false);
-                        }}
-                      >
-                        {(currency.symbol || currency).toUpperCase()}
-                      </button>
-                    )
-                  )}
-                </div>
-              </div>
-            )}
+                  <div
+                    className="py-1"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="options-menu"
+                  >
+                    {(activeSection === "fiatToCrypto" ? cryptoList : fiatCurrencies).map(
+                      (currency) => (
+                        <button
+                          key={currency.id || currency}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
+                          role="menuitem"
+                          onClick={() => handleCurrencyChange(currency.id || currency, 'receive')}
+                        >
+                          {(currency.symbol || currency).toUpperCase()}
+                        </button>
+                      )
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
         {error && <p className="text-red-300 text-xs mt-1">{error}</p>}
       </div>
 
-      <button
-        className="w-full bg-white text-blue-600 p-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors mb-6 flex justify-center items-center"
-        onClick={toggleCurrencies}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="mb-4 bg-white bg-opacity-20 rounded-lg p-6"
       >
-        <FaExchangeAlt className="mr-2" /> Switch Currencies
-      </button>
-
-      <div className="mb-6 bg-white bg-opacity-20 rounded-lg p-4">
-        <h2 className="text-lg font-medium mb-4">Transaction Details</h2>
-        <div className="space-y-2">
+        <h2 className="text-xl font-semibold mb-4">Transaction Details</h2>
+        <div className="space-y-3">
           {[
             {
-              label: `${activeSection === "buy" ? "Spend" : "Sell"} Amount`,
+              label: `${activeSection === "fiatToCrypto" ? "Spend" : "Sell"} Amount`,
               value: `${spendAmount} ${spendCurrency.toUpperCase()}`,
             },
             {
-              label: `${activeSection === "buy" ? "Receive" : "For"} Amount`,
+              label: `${activeSection === "fiatToCrypto" ? "Receive" : "For"} Amount`,
               value: `${receiveAmount} ${receiveCurrency.toUpperCase()}`,
             },
             {
@@ -346,21 +329,71 @@ const CryptoSwap = ({ taskType,  activeSection,setActiveSection}) => {
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      <button
-        className="w-full bg-white text-blue-600 p-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors"
+      <motion.button
+        whileHover={{ scale: 1 }}
+        whileTap={{ scale: 0.90 }}
+        className="w-full bg-white text-blue-600 p-4 rounded-lg font-semibold hover:bg-opacity-90 transition-colors shadow-lg"
         onClick={handleCreateOrder}
         disabled={loading}
       >
         {loading ? "LOADING..." : `CONTINUE`}
-      </button>
+      </motion.button>
+      <div className={registerButton}>
+      <div className="flex items-center space-x-3">
+        {/* <Info className="h-5 w-5 text-yellow-500" /> */}
+        <p className="text-sm text-gray-700">
+          Not registered yet? Please{' '}
+          <a 
+            href="/auth/register" 
+            className="font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-300"
+          >
+            register here
+          </a>{' '}
+          
+        </p>
+      </div>
     </div>
-    </>
-  
-  );
 
+<AnimatePresence>
+        {modalStatus && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-white p-8 rounded-lg text-gray-800"
+            >
+         
 
+<h2 className="text-2xl font-bold mb-4">
+{paymentStatus ? "Payment Successful" : "Payment Failed"}
+</h2>
+<p className="mb-6">
+{paymentStatus
+  ? "Your order has been successfully created."
+  : "There was an error processing your payment. Please try again."}
+</p>
+<motion.button
+whileHover={{ scale: 1.05 }}
+whileTap={{ scale: 0.95 }}
+className="w-full bg-blue-600 text-white px-6 py-3 rounded font-semibold"
+onClick={() => setModalStatus(false)}
+>
+Close
+</motion.button>
+</motion.div>
+</motion.div>
+)}
+</AnimatePresence>
+</motion.div>
+);
 };
 
 export default CryptoSwap;

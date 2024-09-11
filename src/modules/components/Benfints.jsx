@@ -2,7 +2,7 @@ import React from 'react';
 
 const BenefitCard = ({ imageUrl, title, description, extraClass = '' }) => {
   return (
-    <div className={`rounded-lg p-4 flex flex-col items-center text-center lg:${extraClass}`}>
+    <div className={`rounded-lg p-4 flex flex-col items-center text-center ${extraClass}`}>
       <div className="mb-4">
         <img src={imageUrl} alt={title} className="w-auto h-60 object-contain" />
       </div>
@@ -35,7 +35,6 @@ const Benefits = () => {
   return (
     <section className="py-12 bg-gray-50">
       <div className="container mx-auto ">
-       {/* <h1 className='text-center text-3xl font-semibold'>Same-day payouts, cheaper than Coinbase.</h1> */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {benefitsData.map((benefit, index) => (
             <BenefitCard

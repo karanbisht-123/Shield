@@ -1,10 +1,11 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { FaCamera, FaUpload, FaUser, FaBuilding, FaTimes } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const FileUpload = ({ label, icon: Icon, onFileChange, previewUrl, onRemove }) => {
   const fileInputRef = useRef(null);
-
+  const navigate = useNavigate()
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -162,7 +163,7 @@ const IdentityVerification = ({ nextStep }) => {
     canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
     canvas.toBlob((blob) => {
       handleFileChange('selfieFile')(blob);
-      setPreviews((prev) => ({ ...prev, selfiePreview: URL.createObjectURL(blob) }));
+      // setPreviews((prev) => ({ ...prev, selfiePreview: URL.createObjectURL(blob) }));
     });
   };
 
