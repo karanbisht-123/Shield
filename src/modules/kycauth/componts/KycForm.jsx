@@ -8,7 +8,7 @@ import { setCurrentStep } from '../../lib/slice/KycSlice';
 import EmailStep from './EmailStep';
 import PersonalInfoStep from './PersonalInfoStep';
 import DocumentUploadStep from './DocumentUploadStep';
-import UserRegister from '../../updateauth/components/userRegister';
+import UserRegister from '../../updateauth/components/UserRegiste';
 import OTPVerificationScreen from '../../updateauth/components/OTPVerificationScreen ';
 import Modal from '../../helper/Modal';
 
@@ -126,81 +126,6 @@ const KycForm = () => {
   const route = location.pathname;
   console.log(route, '------- hii i am route')
   const isVerificationMode = route === '/auth/verify';
-
-  // const renderStep = () => {
-  //   if (isVerificationMode) {
-  //     console.log("Verification Mode");
-  //     switch (currentStep) {
-  //       case 1:
-  //         console.log("Rendering EmailStep");
-  //         return <EmailStep />;
-  //       case 2:
-  //         console.log("Rendering OTPVerificationScreen");
-  //         return <OTPVerificationScreen />;
-  //       default:
-  //         console.log("Unknown step in verification mode");
-  //         return null;
-  //     }
-  //   } else {
-  //     console.log("Registration Mode");
-  //     switch (currentStep) {
-  //       case 1:
-  //         console.log("Rendering UserRegister");
-  //         return <UserRegister />;
-  //       case 2:
-  //         console.log("Rendering PersonalInfoStep");
-  //         return <PersonalInfoStep />;
-  //       case 3:
-  //         console.log("Rendering DocumentUploadStep");
-  //         return <DocumentUploadStep />;
-  //       default:
-  //         console.log("Unknown step in registration mode");
-  //         return null;
-  //     }
-  //   }
-  // };
-  
-  // const handleSubmit = async () => {
-  //   setIsProcessing(true); // Show "Processing..." and disable button
-  //   setIsSubmitting(true);
-
-  //   try {
-  //     localStorage.setItem('kycFormData', JSON.stringify(formData));
-  //     console.log('Form data stored successfully in local storage');
-
-  //     // Simulate processing delay
-  //     setTimeout(() => {
-  //       if (isVerificationMode && currentStep === 2) {
-  //         // Redirect after OTP verification
-  //         navigate('/deposite');  
-  //       } else {
-  //         dispatch(
-  //           openModal({
-  //             link1: '/',
-  //             link2: '/auth/verify',
-  //             title: 'Your KYC is Done',
-  //             content: 'Your KYC verification has been successfully completed.',
-  //             confirmButtonText: 'Home',
-  //             cancelButtonText: 'verify Email',
-  //             confirmButtonColor: 'bg-green-600 hover:bg-green-800',
-  //             cancelButtonColor: 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-100 hover:text-blue-700',
-  //             // confirmButtonIcon: <FaCheck />,
-  //             // cancelButtonIcon: <FaTimes />,
-  //             // onConfirm: () => navigate('/'), 
-  //             // onCancel: () => navigate('/auth/verify'),  
-  //           })
-  //         );
-  //       }
-  //       setIsProcessing(false); 
-  //       setIsSubmitting(false);
-  //     }, 2000); 
-  //   } catch (error) {
-  //     console.error('Error storing form data:', error);
-  //     setIsProcessing(false);
-  //     setIsSubmitting(false);
-  //   }
-  // };
-
 
 
   const handleSubmit = async () => {
