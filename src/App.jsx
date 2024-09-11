@@ -167,13 +167,6 @@ const App = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const nextStep = () => {
-    if (isRegistered) {
-      setCurrentStep((prev) => (prev < 2 ? prev + 1 : 1));
-    } else {
-      setCurrentStep((prev) => (prev < 3 ? prev + 1 : 1));
-    }
-  };
 
   return (
     <>
