@@ -123,9 +123,10 @@ const OrderList = () => {
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
                 <FaCheck className="h-6 w-6 text-green-600" />
               </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-900">Payment Successful!</h3>
+              <h3 className="mt-4 text-lg font-medium text-gray-900">Order Successful!</h3>
               <p className="mt-2 text-sm text-gray-500">
                 Your transaction has been processed successfully.
+                Your assets are now available in your account
               </p>
               <div className="mt-4">
                 <a
@@ -188,7 +189,7 @@ const OrderList = () => {
                 onClick={handlePayment}
                 disabled={processing}
               >
-                {processing ? 'Processing...' : 'Pay Now'}
+                {processing ? 'Processing...' : 'I Have Paid'}
               </motion.button>
             </div>
           </motion.li>
