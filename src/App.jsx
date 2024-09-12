@@ -194,6 +194,13 @@ const App = () => {
           }
         />
 
+<Route
+          path="/auth/Login"
+          element={
+            <KycForm/>
+          }
+        />
+
           <Route
           path="/auth/verify"
           element={

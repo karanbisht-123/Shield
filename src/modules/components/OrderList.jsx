@@ -147,7 +147,7 @@ const OrderList = () => {
   const [firstOrder] = orders || [null];
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 py-6 bg-gray-100 min-h-screen">
+    <div className="container mx-auto px-4 sm:px-6 py-6 bg-gray-100  lg:mt-8 rounded-lg">
       {/* <motion.h2 
         className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-gray-800"
         initial={{ opacity: 0, y: -20 }}
@@ -158,7 +158,7 @@ const OrderList = () => {
       </motion.h2> */}
       {firstOrder ? (
         <motion.div 
-          className="bg-white rounded-xl shadow-lg overflow-hidden"
+          className="bg-white rounded-xl overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
