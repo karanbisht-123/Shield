@@ -52,9 +52,9 @@ const OTPVerificationScreen = ({ onVerify, email }) => {
   return (
     <motion.div
       className="max-w-5xl mx-auto bg-white  p-2 py-6 lg:p-8 "
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 0 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.2 }}
     >
       <div className=" mb-8">
         {/* <motion.div
@@ -102,30 +102,6 @@ const OTPVerificationScreen = ({ onVerify, email }) => {
         </motion.p>
       )}
 
-      {/* <motion.button
-        onClick={verifyOTP}
-        disabled={otp.some((digit) => !digit) || isVerifying}
-        className={`w-full py-3 rounded-lg flex items-center justify-center gap-2 transition-colors duration-300 ${
-          otp.every((digit) => digit) && !isVerifying
-            ? 'bg-blue-600 text-white hover:bg-blue-700'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }`}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        {isVerifying ? (
-          <motion.div
-            className="w-6 h-6 border-t-2 border-white rounded-full animate-spin"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          />
-        ) : (
-          <>
-            <FaCheck />
-            Verify OTP
-          </>
-        )}
-      </motion.button> */}
 
       <div className="mt-6">
         <p className="text-gray-600">Didn't receive the code?</p>

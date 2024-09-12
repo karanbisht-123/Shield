@@ -18,9 +18,9 @@ const InputField = ({ icon: Icon, ...props }) => (
 
 const ErrorMessage = ({ message }) => (
   <motion.p
-    initial={{ opacity: 0, y: -10 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -10 }}
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ transition={{ duration: 0.5 }}
     className="text-red-500 text-sm mt-1"
   >
     {message}

@@ -85,7 +85,7 @@ const PasswordScreen = () => {
     >
       <motion.div
         className="bg-white p-2 lg:p-8 rounded-lg  w-full max-w-5xl"
-        initial={{ y: -50 }}
+        initial={{ y: -20 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 120 }}
       >

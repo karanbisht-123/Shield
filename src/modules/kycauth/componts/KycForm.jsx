@@ -3,13 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { openModal } from "../../lib/slice/ModalSlice";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  FaCheck,
-  FaUser,
-  FaIdCard,
-  FaEnvelope,
-  FaLock,
-} from "react-icons/fa";
+import { FaCheck, FaUser, FaIdCard, FaEnvelope, FaLock } from "react-icons/fa";
 import { setCurrentStep } from "../../lib/slice/KycSlice";
 import { SiCryptpad } from "react-icons/si";
 
@@ -165,7 +159,6 @@ const Sidebar = ({ currentStep, mode }) => {
   );
 };
 
-
 // Main KYC Form Component
 const KycForm = () => {
   const dispatch = useDispatch();
@@ -203,17 +196,19 @@ const KycForm = () => {
                   link1: "/",
                   link2: "/auth/login",
                   title: "Email Verified Successfully",
-                  content: "Congratulations! Your Email verification is complete. You can now proceed with your account activities.",
+                  content:
+                    "Congratulations! Your Email verification is complete. You can now proceed with your account activities.",
                   confirmButtonText: "Go to Home",
                   cancelButtonText: "Login",
                   confirmButtonColor: "bg-green-600 hover:bg-green-800",
-                  cancelButtonColor: "bg-white text-gray-900 border border-gray-200 hover:bg-gray-100 hover:text-blue-700",
+                  cancelButtonColor:
+                    "bg-white text-gray-900 border border-gray-200 hover:bg-gray-100 hover:text-blue-700",
                 })
               );
             }
             break;
           case "login":
-            navigate("/deposite"); 
+            navigate("/deposite");
             break;
           case "kyc":
             dispatch(
@@ -301,12 +296,13 @@ const KycForm = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.5 }}
-            className={`flex-1 xl:p-6 p-3 lg:p-10 bg-white lg:bg-[${backgroundColors[currentStep - 1]}] lg:rounded-r-3xl lg:shadow-2xl`}
-
+            // initial={{ opacity: 0, x: 100 }}
+            // animate={{ opacity: 1, x: 0 }}
+            // exit={{ opacity: 0, x: -100 }}
+            // transition={{ duration: 0.5 }}
+            className={`flex-1 xl:p-6 p-3 lg:p-10 bg-white lg:bg-[${
+              backgroundColors[currentStep - 1]
+            }] lg:rounded-r-3xl lg:shadow-2xl`}
           >
             <div className="bg-white  lg:p-8 rounded-2xl xl:shadow-lg">
               {renderStep()}
