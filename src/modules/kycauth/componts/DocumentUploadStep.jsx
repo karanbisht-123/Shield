@@ -441,7 +441,7 @@ const DocumentUploadStep = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg ">
+    <div className="max-w-2xl mx-auto lg:p-6 p-2 bg-white rounded-lg ">
       <h2 className="text-3xl font-semibold mb-8">Verify Your Identity</h2>
 
       <div className="mb-6 flex justify-center">
@@ -530,10 +530,10 @@ const DocumentUploadStep = () => {
               autoPlay
             />
           </div>
-          <div className="p-4 flex justify-center gap-4">
+          <div className=" p-2 lg:p-4 flex justify-center   gap-2 lg:gap-4">
             <button
               onClick={startCamera}
-              className="bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-300 py-2 px-4 rounded"
+              className="bg-blue-600 text-white hover:bg-blue-700 text-sm transition-colors duration-300 py-1.5 px-3 rounded"
             >
               Start Camera
             </button>

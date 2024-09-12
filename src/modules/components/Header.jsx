@@ -90,7 +90,7 @@ const Header = () => {
             } transition-colors`}
             onClick={() => {
               setActiveTab("account-details");
-              navigate("/auth/register");
+              navigate("/auth/login");
             }}
           >
             <FaUniversity className="text-2xl" />

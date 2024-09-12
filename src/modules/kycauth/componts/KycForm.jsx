@@ -83,7 +83,7 @@ const Sidebar = ({ currentStep, mode }) => {
   const currentSteps = steps[mode];
 
   return (
-    <div className="w-full lg:w-1/3 lg:bg-gradient-to-b from-blue-600 to-blue-400 p-6 shadow-2xl">
+    <div className="w-full lg:w-1/3 lg:bg-gradient-to-b from-blue-600 to-blue-400 lg:p-6 p-3 pt-6 shadow-2xl">
       {/* Desktop view */}
       <div className="space-y-8 lg:block hidden">
         {currentSteps.map((step, index) => (
@@ -116,20 +116,20 @@ const Sidebar = ({ currentStep, mode }) => {
       </div>
 
       {/* Mobile view */}
-      <div className="md:hidden lg:p-6 p-2 py-6 bg-white">
-        <div className="mb-8">
+      <div className="md:hidden lg:p-6 w-full  ">
+        <div className="">
           <div className="flex items-center justify-between">
             {currentSteps.map((step, index) => (
               <React.Fragment key={index}>
                 <div
                   className={`flex flex-col items-center ${
-                    index + 1 <= currentStep ? "text-blue-600" : "text-black"
+                    index + 1 <= currentStep ? "text-white" : "text-black"
                   } cursor-pointer`}
                 >
                   <div
                     className={`rounded-full transition duration-500 ease-in-out h-8 w-8 flex items-center justify-center ${
                       index + 1 <= currentStep
-                        ? "bg-blue-600 text-black"
+                        ? "bg-green-600 text-White"
                         : "border-2 border-gray-300"
                     }`}
                   >
@@ -140,18 +140,18 @@ const Sidebar = ({ currentStep, mode }) => {
                     )}
                   </div>
                   <div
-                    className={`mt-2 text-xs ${
+                    className={`mt-4 text-xs ${
                       index + 1 <= currentStep ? "font-medium" : "font-normal"
                     }`}
                   >
-                    {step.title}
+                    {/* {step.title} */}
                   </div>
                 </div>
                 {index < currentSteps.length - 1 && (
                   <div
                     className={`flex-auto border-t-2 transition mb-4 ml-1 duration-500 ease-in-out ${
                       index + 1 < currentStep
-                        ? "border-blue-600"
+                        ? "border-grenn-600"
                         : "border-gray-300"
                     }`}
                   ></div>
@@ -295,7 +295,7 @@ const KycForm = () => {
   return (
     <>
       <Modal />
-      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
+      <div className="flex flex-col lg:flex-row min-h-screen xl:bg-gray-100 pb-12">
         <Sidebar currentStep={currentStep} mode={mode} />
 
         <AnimatePresence mode="wait">
@@ -305,11 +305,10 @@ const KycForm = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.5 }}
-            className={`flex-1 p-6 lg:p-10 ${
-              backgroundColors[currentStep - 1]
-            } lg:rounded-r-3xl shadow-2xl`}
+            className={`flex-1 xl:p-6 p-3 lg:p-10 bg-white lg:bg-[${backgroundColors[currentStep - 1]}] lg:rounded-r-3xl lg:shadow-2xl`}
+
           >
-            <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-lg">
+            <div className="bg-white  lg:p-8 rounded-2xl xl:shadow-lg">
               {renderStep()}
             </div>
             <div className="mt-8 flex justify-center items-center">

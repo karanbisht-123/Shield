@@ -143,8 +143,8 @@ const CryptoSwap = ({ taskType }) => {
   const total = parseFloat(spendAmount) + networkFee + exchangeFee;
 
   const containerClass = taskType === 'logOrder'
-  ? 'w-full xl:mt-4 md:mt-0 max-w-5xl mx-auto bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white p-5 xl:rounded-2xl shadow-2xl'
-  : 'w-full xl:mt-4 md:mt-0 max-w-lg mx-auto bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white p-5 xl:rounded-2xl shadow-2xl';
+  ? 'w-full xl:mt-4 md:mt-0 max-w-5xl mx-auto bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white p-3 pb-12 lg:pb-5 lg:p-5  xl:rounded-2xl shadow-2xl'
+  : 'w-full xl:mt-4 md:mt-0 max-w-lg mx-auto bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white p-3 lg:p-5 xl:rounded-2xl lg:shadow-2xl';
 
   const registerButton = taskType === 'logOrder' ? 'hidden':'px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-lg shadow-sm mt-4'
   return (

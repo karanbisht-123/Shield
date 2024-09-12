@@ -83,7 +83,7 @@ const Modal = () => {
         <div className="p-4 text-center">
           <h3 className="mb-5 text-lg font-normal text-gray-500">{title}</h3>
           <p className="mb-5 text-gray-500">{content}</p>
-          <div className="flex justify-center gap-24">
+          <div className="flex justify-center gap-8 lg:gap-24">
             <button
               type="button"
               className={`inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-lg focus:ring-4 focus:outline-none ${confirmButtonColor}`}

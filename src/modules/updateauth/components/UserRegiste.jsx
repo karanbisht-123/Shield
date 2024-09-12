@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { setEmail } from "../../lib/slice/KycSlice";
 import debounce from 'lodash.debounce';
 
-const UserRegister = ({ nextStep }) => {
+const UserRegister = () => {
   const [country, setCountry] = useState("");
   const [emailError, setEmailError] = useState("");
   const [countryError, setCountryError] = useState("");
