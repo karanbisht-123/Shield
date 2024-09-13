@@ -94,30 +94,6 @@ const DocumentUploadStep = () => {
     dispatch(removeDocument(docType));
   };
 
-  const validateForm = useCallback(() => {
-    const newErrors = {};
-    if (userType === "individual") {
-      if (!documents.idFile) newErrors.idFile = "ID file is required.";
-      if (!documents.selfieFile) newErrors.selfieFile = "Selfie file is required.";
-    } else {
-      if (!documents.businessReg) newErrors.businessReg = "Business registration document is required.";
-      if (!documents.addressProof) newErrors.addressProof = "Proof of address is required.";
-      if (!documents.ownerId) newErrors.ownerId = "Owner ID is required.";
-      if (!documents.selfieFile) newErrors.selfieFile = "Selfie file is required.";
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }, [userType, documents]);
-
-  const handleSubmit = () => {
-    if (validateForm()) {
-      alert("Your identity verification data has been submitted.");
-      // Here you would typically dispatch an action to submit the data to your backend
-    } else {
-      alert("Please upload all required documents before submitting.");
-    }
-  };
-
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });

@@ -4,19 +4,17 @@ import { FaEnvelope, FaGlobe } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { checkEmailExists } from "../../lib/slice/AuthSlice";
 import { useNavigate } from "react-router-dom";
-import { setEmail } from "../../lib/slice/KycSlice";
+import { setEmail, setPersonalInfo } from "../../lib/slice/KycSlice";
 import debounce from 'lodash.debounce';
 
-const UserRegister = () => {
-  const [country, setCountry] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [countryError, setCountryError] = useState("");
+const UserRegister = ({ errors }) => {
+  console.log
   const [promotion, setPromotion] = useState(true);
   const [terms, setTerms] = useState(true);
   const [countries, setCountries] = useState([]);
   const [isLoadingCountry, setIsLoadingCountry] = useState(true);
   const [emailExistsMessage, setEmailExistsMessage] = useState("");
-  const { email } = useSelector((state) => state.kyc);
+  const { email, country } = useSelector((state) => state.kyc);
   const emailExists = useSelector((state) => state.auth.emailExists);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,7 +36,7 @@ const UserRegister = () => {
       try {
         const response = await fetch("https://ipapi.co/json/");
         const data = await response.json();
-        setCountry(data.country_name || "");
+        dispatch(setPersonalInfo({ country: data.country_name || "" }));
       } catch (error) {
         console.error("Failed to fetch country information", error);
       } finally {
@@ -62,7 +60,7 @@ const UserRegister = () => {
 
     fetchCountryBasedOnIP();
     fetchCountries();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (email) {
@@ -78,32 +76,12 @@ const UserRegister = () => {
     }
   }, [emailExists]);
 
-  const validateForm = () => {
-    let isValid = true;
-
-    if (!email) {
-      setEmailError("Email address is required.");
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError("Please enter a valid email address.");
-      isValid = false;
-    } else {
-      setEmailError("");
-    }
-
-    if (!country) {
-      setCountryError("Country of residence is required.");
-      isValid = false;
-    } else {
-      setCountryError("");
-    }
-
-    return isValid;
+  const handleEmailChange = (e) => {
+    dispatch(setEmail(e.target.value));
   };
 
-  const handleEmailChange = (e) => {
-    // setEmailExistsMessage("");
-    dispatch(setEmail(e.target.value));
+  const handleCountryChange = (e) => {
+    dispatch(setPersonalInfo({ country: e.target.value }));
   };
 
   const handleRedirectToVerify = () => {
@@ -131,15 +109,16 @@ const UserRegister = () => {
           value={email}
           onChange={handleEmailChange}
           className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 ${
-            emailError
+            errors?.email
               ? "border-red-500 focus:ring-red-500"
               : "border-gray-300 focus:ring-blue-500"
           }`}
           placeholder="Enter your email"
         />
-        {emailError && (
-          <p className="text-red-500 text-sm mt-1">{emailError}</p>
-        )}
+    {errors && errors.email && typeof errors.email === 'string' && errors.email.trim() !== '' && (
+  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+)}
+
         {emailExistsMessage && (
           <div className="text-red-500 text-sm mt-1">
             {emailExistsMessage}
@@ -165,12 +144,12 @@ const UserRegister = () => {
         ) : (
           <select
             value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 ${
-              countryError
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-300 focus:ring-blue-500"
-            }`}
+            onChange={handleCountryChange}
+            className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2
+          
+            
+            `
+          }
           >
             <option value="">Choose country</option>
             {countries.map((c) => (
@@ -180,9 +159,9 @@ const UserRegister = () => {
             ))}
           </select>
         )}
-        {countryError && (
-          <p className="text-red-500 text-sm mt-1">{countryError}</p>
-        )}
+        {/* {errors?.country && (
+          <p className="text-red-500 text-sm mt-1">{errors.country}</p>
+        )} */}
       </div>
 
       <div className="mb-4">

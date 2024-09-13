@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { openModal } from "../../lib/slice/ModalSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaCheck, FaUser, FaIdCard, FaEnvelope, FaLock } from "react-icons/fa";
-import { setCurrentStep } from "../../lib/slice/KycSlice";
+import { setCurrentStep, submitKycData } from "../../lib/slice/KycSlice";
 import { SiCryptpad } from "react-icons/si";
 
 // Import components
@@ -17,9 +17,8 @@ import Modal from "../../helper/Modal";
 import CryptoSwap from "../../components/CryptoSwap";
 import PasswordCreationScreen from "./PasswordCreationScreen";
 
-// Sidebar Component
+
 const Sidebar = ({ currentStep, mode }) => {
-  // Define steps based on the mode
   const steps = {
     verification: [
       {
@@ -159,10 +158,13 @@ const Sidebar = ({ currentStep, mode }) => {
   );
 };
 
+
 // Main KYC Form Component
 const KycForm = () => {
   const dispatch = useDispatch();
-  const { currentStep, ...formData } = useSelector((state) => state.kyc);
+  const { currentStep, errors, isValid, ...formData } = useSelector((state) => state.kyc);
+
+  console.log( errors, 'hii i am eroors for seconde step ')
   const location = useLocation();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -178,15 +180,18 @@ const KycForm = () => {
 
   // Handle form submission
   const handleSubmit = async () => {
+    if (isValid) {
+      // Display error messages or prevent submission
+      console.log("Form is not valid. Please fix the errors.");
+      return;
+    }
+
     setIsProcessing(true);
     setIsSubmitting(true);
 
     try {
-      // Store form data in local storage
-      localStorage.setItem("kycFormData", JSON.stringify(formData));
-      console.log("Form data stored successfully in local storage");
+      dispatch(submitKycData());
 
-      // Simulate processing delay
       setTimeout(() => {
         switch (mode) {
           case "verification":
@@ -234,7 +239,7 @@ const KycForm = () => {
         dispatch(setCurrentStep(1)); // Reset to the first step
       }, 2000);
     } catch (error) {
-      console.error("Error storing form data:", error);
+      console.error("Error submitting form data:", error);
       setIsProcessing(false);
       setIsSubmitting(false);
     }
@@ -246,9 +251,9 @@ const KycForm = () => {
       case "verification":
         switch (currentStep) {
           case 1:
-            return <OTPVerificationScreen />;
+            return <OTPVerificationScreen  />;
           case 2:
-            return <PasswordCreationScreen />;
+            return <PasswordCreationScreen  />;
           default:
             return null;
         }
@@ -257,20 +262,20 @@ const KycForm = () => {
           case 1:
             return <EmailStep />;
           case 2:
-            return <PasswordCreationScreen />;
+            return <PasswordCreationScreen  />;
           default:
             return null;
         }
       case "kyc":
         switch (currentStep) {
           case 1:
-            return <UserRegister />;
+            return <UserRegister errors={errors} />;
           case 2:
             return <CryptoSwap taskType="step_2" />;
           case 3:
-            return <PersonalInfoStep />;
+            return <PersonalInfoStep errors={errors} />;
           case 4:
-            return <DocumentUploadStep />;
+            return <DocumentUploadStep errors={errors} />;
           default:
             return null;
         }
@@ -296,15 +301,11 @@ const KycForm = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
-            // initial={{ opacity: 0, x: 100 }}
-            // animate={{ opacity: 1, x: 0 }}
-            // exit={{ opacity: 0, x: -100 }}
-            // transition={{ duration: 0.5 }}
             className={`flex-1 xl:p-6 p-3 lg:p-10 bg-white lg:bg-[${
               backgroundColors[currentStep - 1]
             }] lg:rounded-r-3xl lg:shadow-2xl`}
           >
-            <div className="bg-white  lg:p-8 rounded-2xl xl:shadow-lg">
+            <div className="bg-white lg:p-8 rounded-2xl xl:shadow-lg">
               {renderStep()}
             </div>
             <div className="mt-8 flex justify-center items-center">
@@ -319,9 +320,9 @@ const KycForm = () => {
                   }
                 }}
                 className={`px-6 py-3 bg-blue-600 w-full text-white rounded-full hover:bg-blue-700 transition-colors font-medium flex items-center space-x-2 ${
-                  isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                  isSubmitting  ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-                disabled={isSubmitting}
+                // disabled={isSubmitting || !isValid}
               >
                 {isProcessing ? (
                   <span className="flex items-center space-x-2">

@@ -1,11 +1,26 @@
 import React from "react";
 import { FaHome, FaExchangeAlt, FaWallet, FaUser } from "react-icons/fa";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUniversity } from "react-icons/fa";
+import { useSelector , useDispatch } from "react-redux";
+import { checkEmailExists } from "../lib/slice/AuthSlice";
 const Header = () => {
+   const dispatch = useDispatch()
   const [activeTab, setActiveTab] = React.useState("Home");
   const navigate = useNavigate(); // Use navigate for redirection
+  const emailExists = useSelector((state) => state.auth.emailExists);
+  console.log(emailExists , 'hiiiiijknsdknkdjsn')
 
+  const useraccountNavigation = ()=>{
+    const route = emailExists ? 'account-details' :'/auth/login'
+    navigate(route)
+  }
+
+  
+  useEffect(()=>{
+    dispatch(checkEmailExists())
+  })
   return (
     <>
       {/* Top Navigation Bar */}
@@ -90,7 +105,7 @@ const Header = () => {
             } transition-colors`}
             onClick={() => {
               setActiveTab("account-details");
-              navigate("/auth/login");
+              useraccountNavigation()
             }}
           >
             <FaUniversity className="text-2xl" />

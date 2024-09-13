@@ -11,14 +11,16 @@ const authSlice = createSlice({
   reducers: {
     checkEmailExists: (state, action) => {
       const email = action.payload;
-      const kycFormDataString = localStorage.getItem('kycFormData');
+      const kycFormDataString = localStorage.getItem('kycData');
 
       if (kycFormDataString) {
         try {
           const kycFormData = JSON.parse(kycFormDataString);
           if (typeof kycFormData === 'object' && kycFormData !== null) {
+            
             console.log(kycFormData, ',,,,,,,')
             const emailExists = kycFormData?.email;
+
             console.log(emailExists, 'hiii i am email exit ')
             state.emailExists = emailExists;
             console.log(emailExists, 'Email already exists');
