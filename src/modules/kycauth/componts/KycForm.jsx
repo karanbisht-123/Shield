@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { openModal } from "../../lib/slice/ModalSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaCheck, FaUser, FaIdCard, FaEnvelope, FaLock } from "react-icons/fa";
-import { setCurrentStep, submitKycData } from "../../lib/slice/KycSlice";
+import { setCurrentStep, submitKycData , setCurrentRoute} from "../../lib/slice/KycSlice";
 import { SiCryptpad } from "react-icons/si";
 
 // Import components
@@ -178,14 +178,20 @@ const KycForm = () => {
       ? "login"
       : "kyc";
 
+
+
+      useEffect(() => {
+        const currentRoute = location.pathname.includes('/register') ? 'kyc' : 'other';
+        dispatch(setCurrentRoute(currentRoute));
+      }, [location, dispatch]);
+    
   // Handle form submission
   const handleSubmit = async () => {
-    if (isValid) {
-      // Display error messages or prevent submission
-      console.log("Form is not valid. Please fix the errors.");
+    if (mode === "kyc" && !isValid) {
+      // Display error messages or prevent submission only for KYC mode
+      console.log("KYC form is not valid. Please fix the errors.");
       return;
     }
-
     setIsProcessing(true);
     setIsSubmitting(true);
 

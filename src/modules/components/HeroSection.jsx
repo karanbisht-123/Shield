@@ -36,7 +36,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className='flex flex-col lg:flex-row items-center justify-between py-12 px-4 lg:px-12 '>
+    <section className='flex flex-col lg:flex-row items-center justify-between py-1 px-4 lg:px-12 '>
       <div className="w-full pl-12 lg:w-1/2 mb-8 lg:mb-0 hidden lg:block">
         <motion.div 
           className="max-w-lg mx-auto lg:mx-0"
@@ -84,7 +84,7 @@ const HeroSection = () => {
           activeSection={activeSection} 
           setActiveSection={setActiveSection} 
         />
-      </motion.div>
+     </motion.div>
     </section>
   );
 };

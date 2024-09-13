@@ -144,9 +144,9 @@ const CryptoSwap = ({ taskType }) => {
 
   const containerClass = taskType === 'logOrder'
   ? 'w-full xl:mt-4 md:mt-0 max-w-5xl mx-auto bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white p-3 pb-12 lg:pb-5 lg:p-5  xl:rounded-2xl shadow-2xl'
-  : 'w-full xl:mt-4 md:mt-0 max-w-lg mx-auto bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white p-3 lg:p-5 xl:rounded-2xl lg:shadow-2xl';
+  : 'w-full xl:mt-4 md:mt-0 max-w-lg mx-auto bg-gradient-to-br from-[#001F90] to-[#2087C2] text-white p-3 lg:p-4 lg:pt-0 xl:rounded-2xl lg:shadow-2xl';
 
-  const registerButton = taskType === 'logOrder' ? 'hidden':'px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-lg shadow-sm mt-4'
+  const registerButton = taskType === 'logOrder' ? 'hidden':'px-4 py-2 bg-blue-200/40   text-md rounded-lg mb-6  text-center  rounded-t-none  '
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -155,7 +155,32 @@ const CryptoSwap = ({ taskType }) => {
       transition={{ duration: 0.5 }}
       className={containerClass}
     >
-      <div className="flex justify-center mb-4 bg-white bg-opacity-20 rounded-lg p-1 relative overflow-hidden">
+
+{
+  taskType ===  "step_2" ? (
+
+
+    <div className=" text-md flex items-center mb-2 px-2 border bg-slate-700 border-blue-600  rounded-t-none    border-t-0 rounded-t-0  rounded-lg  pb-2 pt-2">
+     <h2>Please Complete Your KYC to Unlock the Create Order Feature</h2>
+
+    </div>
+  ):( <div className={registerButton}>
+    <div className="flex items-center space-x-3 mb-1 ">
+      {/* <Info className="h-5 w-5 text-yellow-500" /> */}
+      <p className="text-md text-white">
+        Not registered yet? Please{' '}
+        <a 
+          href="/auth/register" 
+          className="font-medium text-yellow-600 hover:text-yellow-800 hover:underline transition-colors duration-300"
+        >
+          register here
+        </a>{' '}
+        
+      </p>
+    </div>
+  </div>)
+}
+      <div className=" mt-2 flex justify-center mb-4 bg-white bg-opacity-20 rounded-lg p-1 relative overflow-hidden">
         <motion.div
           className="absolute top-0 left-0 w-1/2 h-full bg-white rounded-lg"
           animate={{ x: activeSection === "cryptoToFiat" ? "0%" : "100%" }}
@@ -350,30 +375,7 @@ const CryptoSwap = ({ taskType }) => {
   )}
 </motion.button>
 
-{
-  taskType ===  "step_2" ? (
 
-
-    <div className="mt-2 text-lg">
-     <h2>Please Complete Your KYC to Unlock the Create Order Feature</h2>
-
-    </div>
-  ):( <div className={registerButton}>
-    <div className="flex items-center space-x-3">
-      {/* <Info className="h-5 w-5 text-yellow-500" /> */}
-      <p className="text-sm text-gray-700">
-        Not registered yet? Please{' '}
-        <a 
-          href="/auth/register" 
-          className="font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-300"
-        >
-          register here
-        </a>{' '}
-        
-      </p>
-    </div>
-  </div>)
-}
      
 
        <AnimatePresence>
@@ -413,7 +415,7 @@ Close
 )}
 </AnimatePresence>
 </motion.div>
-);
+   );
 };
 
 export default CryptoSwap;

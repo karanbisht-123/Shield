@@ -147,6 +147,8 @@ const Header = () => {
             <FaUser className="text-2xl" />
             <span className="text-xs">Account</span>
           </button> */}
+
+          
         </div>
       </footer>
     </>
