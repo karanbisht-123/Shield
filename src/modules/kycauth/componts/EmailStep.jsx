@@ -1,23 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setEmail } from "../../lib/slice/KycSlice";
 import { motion } from "framer-motion";
-import { FaEnvelope, FaCheckCircle } from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa";
+import { checkEmailExists } from "../../lib/slice/AuthSlice";
+import { useNavigate } from "react-router-dom"; // assuming react-router
 
 const EmailStep = () => {
   const dispatch = useDispatch();
-  const { email } = useSelector((state) => state.kyc);
-  const [emailError, setEmailError] = useState("");
-  const [isRegistered, setIsRegistered] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
+  const navigate = useNavigate(); // for redirection if needed
 
+  const { email } = useSelector((state) => state.kyc);
+  const emailExists = useSelector((state) => state.auth.emailExists);
+
+  const [emailError, setEmailError] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [debounceTimer, setDebounceTimer] = useState(null);
+
+  // Handle email change with debounce
   const handleEmailChange = (e) => {
-    dispatch(setEmail(e.target.value));
+    const newEmail = e.target.value;
+    dispatch(setEmail(newEmail));
     setEmailError("");
-    setIsRegistered(false);
     setOtpSent(false);
+
+    // Clear the previous debounce timer
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+
+    // Set a new debounce timer for email check
+    const timer = setTimeout(() => {
+      if (validateEmail(newEmail)) {
+        dispatch(checkEmailExists(newEmail));
+      }
+    }, 1000); // 1000ms debounce
+
+    setDebounceTimer(timer);
   };
 
+  // Validate email format
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(String(email).toLowerCase());
@@ -26,18 +48,12 @@ const EmailStep = () => {
   const handleSubmit = () => {
     if (!validateEmail(email)) {
       setEmailError("Please enter a valid email address");
-      return;
+      return; // Do nothing, just prevent submit if email is invalid
     }
 
-    // Simulate checking if email is registered (replace with actual API call)
-    setIsRegistered(Math.random() > 0.5);
-
-    if (isRegistered) {
+    if (emailExists) {
       // Simulate sending OTP (replace with actual OTP sending logic)
       setOtpSent(true);
-    } else {
-      // Proceed to next step (implement this based on your app's navigation logic)
-      console.log("Proceeding to next step");
     }
   };
 
@@ -71,33 +87,26 @@ const EmailStep = () => {
         {emailError && (
           <p className="text-red-500 text-sm mt-1">{emailError}</p>
         )}
-        {isRegistered && !otpSent && (
-          <p className="text-blue-500 text-sm mt-1">
-            This email is already registered. An OTP will be sent for
+        {otpSent && (
+          <p className="text-green-500 text-sm mt-4">
+            OTP has been sent to {email}. Please check your inbox for
             verification.
+          </p>
+        )}
+        {!emailExists && email && !otpSent && validateEmail(email) && (
+          <p className="text-red-500 text-sm mt-4">
+            This email is not registered with us. Please{" "}
+            <button
+              className="text-blue-500 underline"
+              onClick={() => navigate("/auth/register")}
+            >
+              register
+            </button>{" "}
+            first.
           </p>
         )}
       </div>
 
-      {/* <motion.button
-        onClick={handleSubmit}
-        className={`w-full py-3 rounded-lg flex items-center justify-center gap-2 transition-colors duration-300 ${
-          email ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-400 text-gray-700 cursor-not-allowed'
-        }`}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        disabled={!email}
-      >
-        <FaCheckCircle />
-        {isRegistered && !otpSent ? 'Send OTP' : 'Continue'}
-      </motion.button> */}
-
-      {otpSent && (
-        <p className="text-green-500 text-sm mt-4">
-          OTP has been sent to {email}. Please check your inbox for
-          verification.
-        </p>
-      )}
     </motion.div>
   );
 };

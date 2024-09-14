@@ -187,11 +187,7 @@ const KycForm = () => {
     
   // Handle form submission
   const handleSubmit = async () => {
-    if (mode === "kyc" && !isValid) {
-      // Display error messages or prevent submission only for KYC mode
-      console.log("KYC form is not valid. Please fix the errors.");
-      return;
-    }
+  
     setIsProcessing(true);
     setIsSubmitting(true);
 
