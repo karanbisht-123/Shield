@@ -63,10 +63,10 @@ const AuthForm = () => {
           <p className="text-sm text-gray-600 mb-4">or</p>
           <div className="flex justify-center space-x-4 mb-6">
             <button className="p-2 border border-gray-300 rounded-full">
-              <FaGoogle className="w-6 h-6 text-blue-500" /> {/* Google icon with blue color */}
+              <FaGoogle className="w-6 h-6 text-blue-500" /> 
             </button>
             <button className="p-2 border border-gray-300 rounded-full">
-              <FaFacebook className="w-6 h-6 text-blue-600" /> {/* Facebook icon with blue color */}
+              <FaFacebook className="w-6 h-6 text-blue-600" /> 
             </button>
           </div>
           <p className="text-sm text-gray-600">

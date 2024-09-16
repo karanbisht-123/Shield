@@ -47,8 +47,6 @@ const BankWalletTabs = () => {
   const [activeTab, setActiveTab] = useState('wallet');
 
   const walletDetails = [
-    // { label: "Ethereum Address", value: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e", icon: FaEthereum, link: "https://etherscan.io/address/0x742d35Cc6634C0532925a3b844Bc454e4438f44e" },
-    // { label: "ETH Balance", value: "1,234.56 ETH", icon: FaEthereum },
     { label: "Bitcoin Address", value: "3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5", icon: FaBitcoin, link: "https://www.blockchain.com/btc/address/3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5" },
     { label: "BTC Balance", value: "0.5473 BTC", icon: FaBitcoin },
     // { label: "USD Balance", value: "$45,678.90", icon: FaDollarSign },

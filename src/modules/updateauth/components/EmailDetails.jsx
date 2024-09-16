@@ -38,7 +38,7 @@ const EmailDetails = ({ nextStep }) => {
       if (isRegistered) {
         sendOtp(); // If registered, send OTP
       } else {
-        localStorage.setItem('registeredEmail', email); // Store email in localStorage
+        localStorage.setItem('registeredEmail', email); 
         nextStep({ email }); // Proceed to the next step
       }
     }

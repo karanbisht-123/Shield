@@ -3,8 +3,6 @@ import { motion } from 'framer-motion';
 import { FaCheckCircle, FaGlobe } from 'react-icons/fa';
 
 const VerifyUserDetails = ({ onSubmit, initialData , nextStep }) => {
-
-  console.log(initialData, 'hii i am intail data -----')
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [company, setCompany] = useState('');
